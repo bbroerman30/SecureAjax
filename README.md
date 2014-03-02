@@ -7,13 +7,13 @@ Secure Ajax Layer
 
 Point By Point
 ==============
-•	Does not rely on 3rd Party registrars.
-•	No expensive certificates needed.
-•	Provides encryption and authentication in the same atomic operation.
-•	Encryption is done at the application level, before entering the browser, plug-ins, or the operating system, bypassing insecurities in these layers.
-•	Not affected by known and exploitable hacks and breaks in TLS and SSL security.
-•	Not affected by known and exploitable hacks and breaks in MS Internet Explorer XMLHttpRequest object vulnerabilities.
-•	Cheap and effective.
+ •	Does not rely on 3rd Party registrars.
+ •	No expensive certificates needed.
+ •	Provides encryption and authentication in the same atomic operation.
+ •	Encryption is done at the application level, before entering the browser, plug-ins, or the operating system, bypassing insecurities in these layers.
+ •	Not affected by known and exploitable hacks and breaks in TLS and SSL security.
+ •	Not affected by known and exploitable hacks and breaks in MS Internet Explorer XMLHttpRequest object vulnerabilities.
+ •	Cheap and effective.
 
 What it does
 ============
@@ -25,27 +25,27 @@ What it does
 
 Why did I make this?
 =================
-•	HTTPS servers can be costly, and not all hosting providers can give it to you. 
-•	Properly generated and authenticated certificates are very costly and must be renewed regularly. 
-•	Most web applications cannot make use of secure and non-secure communications modes on the same page, breaking the seamless experience of AJAX.
-•	HTTPS and SSL have been under increasing attack, and there have been reports of many successful attacks! 
-•	Your browser's XMLHTTPRequestObject, the object that enables AJAX, can be compromised outside of your web application, and can funnel data to other destinations EVEN IF YOU USE SSL AND HTTPS.
-•	HTTPS and SSL only authenticate the server to the client, not the client to the server. This library authenticates both at the same time. 
+ •	HTTPS servers can be costly, and not all hosting providers can give it to you. 
+ •	Properly generated and authenticated certificates are very costly and must be renewed regularly. 
+ •	Most web applications cannot make use of secure and non-secure communications modes on the same page, breaking  the seamless experience of AJAX.
+ •	HTTPS and SSL have been under increasing attack, and there have been reports of many successful attacks! 
+ •	Your browser's XMLHTTPRequestObject, the object that enables AJAX, can be compromised outside of your web application, and can funnel data to other destinations EVEN IF YOU USE SSL AND HTTPS.
+ •	HTTPS and SSL only authenticate the server to the client, not the client to the server. This library authenticates both at the same time. 
 
 
 Features:
 =================
-•	Uses AES-256 for communications, with 128 bit RSA signatures. 
-•	Encryption keys are randomly generated per session, and can be renegotiated as needed. 
-•	Distribution of encryption keys and code is performed with a process that is immune to man-in-the-middle attacks.  
-•	Shared secrets DO NOT pass through the communications channel. 
-•	Does NOT use SSL or third party certificates, but may be used on top of SSL/HTTPS for added security.
-•	Written entirely in PHP on the server and JavaScript on the client. 
-•	Provides authentication of the user. 
-•	Secures your transaction data. 
-•	Secures your application server from prying. 
-•	Secures your client from man-in-the-middle attacks on JavaScript code loading. 
-•	Cheap, effective, and simple to use!
+ •	Uses AES-256 for communications, with 128 bit RSA signatures. 
+ •	Encryption keys are randomly generated per session, and can be renegotiated as needed. 
+ •	Distribution of encryption keys and code is performed with a process that is immune to man-in-the-middle attacks.  
+ •	Shared secrets DO NOT pass through the communications channel. 
+ •	Does NOT use SSL or third party certificates, but may be used on top of SSL/HTTPS for added security.
+ •	Written entirely in PHP on the server and JavaScript on the client. 
+ •	Provides authentication of the user. 
+ •	Secures your transaction data. 
+ •	Secures your application server from prying. 
+ •	Secures your client from man-in-the-middle attacks on JavaScript code loading. 
+ •	Cheap, effective, and simple to use!
 
 How it Works 
 =================
@@ -78,30 +78,30 @@ What are in the directories
 Installation
 ============
 The Secure Ajax Layer currently consists of 4 PHP files that go into your server’s document root (usually htdocs, http, etc.).  These files are 
-•	dhkeyserver.php – The Diffie-Hellman Key exchange service, used to negotiate AES session keys.
-•	secureAjaxLogin.js.php – The login server called by the javascript when the user tries to log in.
-•	secureajax.js.php - the javascript generator. This is the 1st level bootloader script.
-•	SecureAjaxAPIs.php – Contains several internal Secure Ajax helper APIs. 
+ •	dhkeyserver.php – The Diffie-Hellman Key exchange service, used to negotiate AES session keys.
+ •	secureAjaxLogin.js.php – The login server called by the javascript when the user tries to log in.
+ •	secureajax.js.php - the javascript generator. This is the 1st level bootloader script.
+ •	SecureAjaxAPIs.php – Contains several internal Secure Ajax helper APIs. 
 These are the core of the SecureAjax system.  
 
 Additionally, there are a set of files (contained in the etc directory) that are placed outside your servers document root that contain helper functions, and configuration information.
-•	secureAjaxConfig.php – Contains service level configuration information, such as where binaries for the C versions are kept, locations of helper files, and functions that are called by the login service to retrieve user names, passwords, challenge images, and challenge text. This is the primary place where you would configure / modify the configuration.
-•	Secureajax_helper.php – Includes internal methods used to encode / decode messages and to validate them. Also contains includes that define whether to use pure PHP code, PHP/GMP code, or compiled C code when performing operations; Other than these top level includes, this file should not need to be modified.
-•	makeRSAkeys.php – a command line PHP script used to pre-generate RSA keys (kept in rsakeys.php) to be used when using the pure PHP implementations of the cryptography primitives. (The Pure PHP version of the key generator is too slow to be used in production) 
-•	rsa-<x>.php – The RSA primitives. This includes a pure PHP version, a PHP version that uses the Gnu Multi-Precision Math plug-in, and a PHP version that calls external compiled C applications for RSA primitives.
-•	Diffie-hellman-<x>.php – The Diffie Hellman Key exchange primitives. This includes a pure PHP version, a PHP version that uses the Gnu Multi-Precision Math plug-in, and a PHP version that calls external compiled C applications
-•	Aes-php.php – The AES encryption primitives. Since this is more than fast enough in PHP, there was no need to generate GMP or C versions. 
-•	BigInt.php – A multi-precision math library written entirely in PHP for the RSA-php.php and Diffie-hellman-php.php files.
-•	Class.JavaScriptPacker.php – An open source library used to to the compacting of the delivered javascript. This reduces the size of the delivered script, and increases the complexity of reverse engineering it.
+ •	secureAjaxConfig.php – Contains service level configuration information, such as where binaries for the C versions are kept, locations of helper files, and functions that are called by the login service to retrieve user names, passwords, challenge images, and challenge text. This is the primary place where you would configure / modify the configuration.
+ •	Secureajax_helper.php – Includes internal methods used to encode / decode messages and to validate them. Also contains includes that define whether to use pure PHP code, PHP/GMP code, or compiled C code when performing operations; Other than these top level includes, this file should not need to be modified.
+ •	makeRSAkeys.php – a command line PHP script used to pre-generate RSA keys (kept in rsakeys.php) to be used when using the pure PHP implementations of the cryptography primitives. (The Pure PHP version of the key generator is too slow to be used in production) 
+ •	rsa-<x>.php – The RSA primitives. This includes a pure PHP version, a PHP version that uses the Gnu Multi-Precision Math plug-in, and a PHP version that calls external compiled C applications for RSA primitives.
+ •	Diffie-hellman-<x>.php – The Diffie Hellman Key exchange primitives. This includes a pure PHP version, a PHP version that uses the Gnu Multi-Precision Math plug-in, and a PHP version that calls external compiled C applications
+ •	Aes-php.php – The AES encryption primitives. Since this is more than fast enough in PHP, there was no need to generate GMP or C versions. 
+ •	BigInt.php – A multi-precision math library written entirely in PHP for the RSA-php.php and Diffie-hellman-php.php files.
+ •	Class.JavaScriptPacker.php – An open source library used to to the compacting of the delivered javascript. This reduces the size of the delivered script, and increases the complexity of reverse engineering it.
 In addition, the GIT repository includes the C source code for the C applications that may be used for the primitives, as well as the original versions of open source JavaScript libraries used to create SecureAjax. It also includes a non-compacted version of the main Secure Ajax JS script for your viewing. 
 To configure SecureAjax, simply 
-•	Copy the 4 scripts into your servers document root.
-•	Copy the files from /etc into an area of your server outside your document root.
-•	Update the 1st 4 files to point to the correct location of secureAjaxConfig.php and secureajax_helper.php
-•	Update the secureAjaxConfig.php to point to the correct locations for the binary directory, include directory, secure scripts directory, secure documents directory, and the base URL for your API server.
-•	Implement the methods getUserPassword(),getUserChallengeText(), and getUserChallengeImage() located in secureAjaxConfig.php
-•	Optionally, modify the includes in secureajax_helper.php to use either the pure PHP, PHP/GMP, or C versions of the encryption primitives.
-•	Optionally, if using the C versions of encryption primitives, compile the C sources files, and place them in the configured binary directory.
+ •	Copy the 4 scripts into your servers document root.
+ •	Copy the files from /etc into an area of your server outside your document root.
+ •	Update the 1st 4 files to point to the correct location of secureAjaxConfig.php and secureajax_helper.php
+ •	Update the secureAjaxConfig.php to point to the correct locations for the binary directory, include directory, secure scripts directory, secure documents directory, and the base URL for your API server.
+ •	Implement the methods getUserPassword(),getUserChallengeText(), and getUserChallengeImage() located in secureAjaxConfig.php
+ •	Optionally, modify the includes in secureajax_helper.php to use either the pure PHP, PHP/GMP, or C versions of the encryption primitives.
+ •	Optionally, if using the C versions of encryption primitives, compile the C sources files, and place them in the configured binary directory.
 
 Optionally, if you are using the pure PHP implementation on your server (that is, you can not install the GMP plug-in library, and you can not use the C applications for RSA, and Diffie Hellman) you should consider pre-generating your RSA keys. There is a file in the etc directory called makeRSAkeys.php. You should use this on your development box, or on the command line of your server, to pre-generate your RSA keys. This script may be configured to use a GMP based version of the key generator, the C version, or a pure PHP version. If using windows, you should download and configure WampServer (a PHP server for windows) or configure a linux virtual box. Either way, once configured, you call the makeRSAkeys.php with the number of key entries to be generated as a command line argument. It will output a PHP script to STDOUT.  You can run it in this configuration for testing, and once satisfied, you can redirect the output to rsakeys.php (the default file for pre-generated RSA keys). Please make sure to generate a LARGE array (lots of keys). The more keys you have, the more secure your application and the less often you will need to regenerate the file. If using pre-generated keys, this file should be regenerated periodically.
 
@@ -112,21 +112,23 @@ You will also need to update the require_once in the SecureAjaxTestSvr.php scrip
 Writing your own APIs 
 =====================
 Constructing APIs in SecureAjax is very simple. The JavaScript library makes no assumptions about the contents of a message. It can be JSON, XML, Text or any other format. The message is sent to the server by calling window.secureAjax.sendSecureMessage() and passing a string message ( either XML string, or JSON formatted string ) and a callback function. On the server side, call either the helper function getMessage() to retrieve the string send by the client, or you can do it yourself with:
-
+<PRE>
 if( isSet($_POST['msg']) && strlen($_POST['msg']) > 0 )    {
     $decoded = decryptMessage( $_POST['msg'] );
     return $decoded;
 }
 return false;
+</PRE>
 
 Sending the response back to the client is fairly simple as well. You can either use the helper method sendResponse() or you can do it yourself with:
-
+<PRE>
 $responseData = encryptResponse( $message );
 if( false !== $responseData ) {
     print( $responseData );
     return true;
 }
 return false;
+</PRE>
 
 The helper functions are defined in secureajax_helper.php and can be renamed to anything that meets your needs.
 
@@ -136,21 +138,23 @@ Public Javascript Methods:
   The SecureAjax javascript object provides several public methods that may be used to re-negotiate session keys, log out, send and receive messages, load images, pages and scripts securely, and more. The initial login script is loaded at window.top.secureAjaxLogin, and contains one public method: loginEx( x, y, login, callback ).  X and Y define the location for the popup password dialog, login is the user name, and callback is a function to be executed when login is completed. The callback will be passed either Boolean true or false depending on the success of the login. Upon successful login, the API will be accessed through the object window.secureAjax
 
 The public methods are:
-•	getNewSecureKey() – Re-negotiate the session key. Makes a call to dhkeyserver.php. Returns when the new key has successfully been negotiated.
-•	isReady() – Returns true if the object is ready to communicate (code is all loaded and the session key has been retrieved).
-•	setReadyCallback( func ) – Sets a callback that is called when the system is ready. Used instead of polling isReady. 
-•	sendSecureMessage( serviceUrl, parms, callback) – Send a secure message to the named service. The callback is called with the response message if successful (or false if there was an error).
-•	insertScript( scrptname, divid, id, required ) – Load a JavaScript and insert it inside the specified element (divid). If id is set, and required is set to true, the script will wait in a queue until the script with the divid of id has been loaded before loading itself. This can be used to ensure pre-requisite scripts to be loaded first. The script is loaded from the secure documents directory defined in secureAjaxConfig.php
-•	execScript ( scrptname ) – Load and immediately execute the named script. The script is loaded from the secure documents directory defined in secureAjaxConfig.php
-•	loadStylesheet( scrptname ) – Load the named stylesheet, and append to the end of the <head>. Images defined in the stylesheet can not yet be loaded securely, though.  The script is loaded from the secure documents directory defined in secureAjaxConfig.php
-•	loadImage( imgname, target ) – Load the named image file, and insert as a DATA URL at the specified target object. The script is loaded from the secure documents directory defined in secureAjaxConfig.php
-•	loadPage( pagename ) – Securely load a page (and it’s scripts and stylesheets if tagged.). This replaces the current page. SecureAjax session is re-loaded and re-negotiated on each load. To tag a script or style sheet as being loaded securely, use “secure:\\” as the protocol in the URL. For scripts, if you want to ensure a specific load order, add the attribute required='<prereq id>'. Currently, images are not loaded securely with this message (work in progress). See the example page. The script is loaded from the secure documents directory defined in secureAjaxConfig.php
+ •	getNewSecureKey() – Re-negotiate the session key. Makes a call to dhkeyserver.php. Returns when the new key has successfully been negotiated.
+ •	isReady() – Returns true if the object is ready to communicate (code is all loaded and the session key has been retrieved).
+ •	setReadyCallback( func ) – Sets a callback that is called when the system is ready. Used instead of polling isReady. 
+ •	sendSecureMessage( serviceUrl, parms, callback) – Send a secure message to the named service. The callback is called with the response message if successful (or false if there was an error).
+ •	insertScript( scrptname, divid, id, required ) – Load a JavaScript and insert it inside the specified element (divid). If id is set, and required is set to true, the script will wait in a queue until the script with the divid of id has been loaded before loading itself. This can be used to ensure pre-requisite scripts to be loaded first. The script is loaded from the secure documents directory defined in secureAjaxConfig.php
+ •	execScript ( scrptname ) – Load and immediately execute the named script. The script is loaded from the secure documents directory defined in secureAjaxConfig.php
+ •	loadStylesheet( scrptname ) – Load the named stylesheet, and append to the end of the <head>. Images defined in the stylesheet can not yet be loaded securely, though.  The script is loaded from the secure documents directory defined in secureAjaxConfig.php
+ •	loadImage( imgname, target ) – Load the named image file, and insert as a DATA URL at the specified target object. The script is loaded from the secure documents directory defined in secureAjaxConfig.php
+ •	loadPage( pagename ) – Securely load a page (and it’s scripts and stylesheets if tagged.). This replaces the current page. SecureAjax session is re-loaded and re-negotiated on each load. To tag a script or style sheet as being loaded securely, use “secure:\\” as the protocol in the URL. For scripts, if you want to ensure a specific load order, add the attribute required='<prereq id>'. Currently, images are not loaded securely with this message (work in progress). See the example page. The script is loaded from the secure documents directory defined in secureAjaxConfig.php
+
 The use of loadPage, loadImage, loadStylesheet, execScript, and insertScript require the secureAjaxAPIs.php to be present.
 
 Example Usage
 =============
 
 Example JavaScript API call (With XML response):
+<PRE>
 window.secureAjax.sendSecureMessage( "/SecureAjaxTestSvr.php", 
   "input=" + text, 
   function( doc ) {
@@ -159,9 +163,9 @@ window.secureAjax.sendSecureMessage( "/SecureAjaxTestSvr.php",
       document.getElementById('form').echo.value = getTextNode(resp);
     }
   } );
-
+</PRE>
 Example page with login:
-
+<PRE>
 <html>
   <head>
     <title> Secure Ajax Communications Test </title>
@@ -191,9 +195,9 @@ function doLogin() {
     </form>
   </body>
 </html>  
-
+</PRE>
 Example secure page (with loadable scripts/stylesheet):
-
+<PRE>
 <html>
   <head>
     <!-- This loads first, from <secure docs>/Admin_files/xaramenu.js -->
@@ -212,3 +216,4 @@ Example secure page (with loadable scripts/stylesheet):
     </div>	
   </body>
 </html>
+</PRE>
