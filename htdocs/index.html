@@ -1,0 +1,181 @@
+<html>
+  <head>
+    <title> Secure Ajax Communications Test </title>
+    <script type='text/javascript' src='http://archdev.localhost.com/secureAjaxLogin.js.php'></script>
+    <script type='text/javascript'>
+
+    function getTextNode( element )
+    {
+        var returnedText = "";
+
+        if( element )
+        {
+            if( element.textContent )
+            {
+                returnedText = element.textContent;
+            }
+            else if( element.text )
+            {
+                returnedText = element.text;
+            }
+        }
+
+        if( returnedText.indexOf("[CDATA[") > -1 )
+        {
+            returnedText = returnedText.substring(7);
+        }
+
+        if( returnedText.lastIndexOf("]]") > -1 )
+        {
+            returnedText = returnedText.substring(0, returnedText.lastIndexOf("]]") );
+        }
+
+       return returnedText;
+    }    
+	
+    function showWaitCursor()
+    {
+	      var modalBlocker = document.createElement("div");
+        modalBlocker.id = 'modalblocker';
+        modalBlocker.className = 'modalBlocker';
+        document.body.appendChild(modalBlocker);
+        modalBlocker.style.zIndex = 5000;              
+        modalBlocker.style.display = 'block';
+
+	    	var waitcursor = document.getElementById('waitcursor');
+        if( !waitcursor )
+        {
+            waitcursor = document.createElement("img");
+            waitcursor.style.display='none';
+            document.body.appendChild(waitcursor);
+        }
+    
+        waitcursor.src='loading.gif';
+        waitcursor.id='waitcursor';
+        waitcursor.style.position='absolute';
+        waitcursor.style.width='64px';
+        waitcursor.style.height='64px';
+        waitcursor.style.top= 65 +'px';     // hack for now
+        waitcursor.style.left= 70 +'px';    // hack for now
+        waitcursor.style.zIndex=10000;
+        waitcursor.style.display='block';
+    }
+
+    function hideWaitCursor()
+    {
+        var waitcursor = document.getElementById('waitcursor');
+        if( waitcursor )
+        {
+            document.body.removeChild(waitcursor);
+        }
+        
+        var modalBlocker = document.getElementById('modalblocker');
+        if( modalBlocker )
+        {
+            modalBlocker.style.display = 'none';
+            document.body.removeChild(modalBlocker);
+        }
+        
+    }
+      
+    function sendSecure()
+    {
+        var text = document.getElementById('frm').input.value;
+        showWaitCursor();
+        window.secureAjax.sendSecureMessage( "/SecureAjaxTestSvr.php", "input=" +text, function( doc ) 
+        {
+		        hideWaitCursor()
+            if(doc)
+            {
+                var resp = doc.getElementsByTagName("response")[0];
+                document.getElementById('frm').echo.value    = getTextNode(resp);
+            }
+        });
+    }
+	
+	function getSecureImg(imgname)
+	{	
+      var text = document.getElementById('frm').input.value;
+      showWaitCursor();
+
+	    window.secureAjax.sendSecureMessage( "/SecureAjaxTestSvr.php", "action=getImg&name=images/"+imgname, function( doc ) 
+	    {
+   		    hideWaitCursor()
+          if(doc)
+          {
+              var resp = doc.getElementsByTagName("response")[0];				
+				      var mimetype = resp.getAttribute('mimetype')
+              var base64rep = getTextNode(resp);
+  			  		document.getElementById('imgtgt').innerHTML =	"<img src=\"data:" + mimetype + ";base64," + base64rep + "\" alt=\"dynamically loaded\">";			
+          }
+      });		
+	}
+	
+	function loadPageSecure()
+	{
+	    window.secureAjax.loadPage("securepage.html");
+	}
+	
+  function loadScriptSecure()
+	{
+      document.getElementById('imgtgt').innerHTML = "";
+      var s=document.createElement('script');
+      s.text="window.secureAjax.insertScript('scripts/test.js','imgtgt');";
+      s.type='text/javascript';
+      document.getElementById('imgtgt').appendChild(s);        	    
+	}
+	         
+  function doLogin()
+  {
+      var username = document.getElementById('loginform').username.value;        
+        
+      showWaitCursor();
+      window.secureAjaxLogin.loginEx(100,100,username,function(success)
+      {
+          hideWaitCursor();
+          if( false == success )
+          {
+              alert("Invalid Login.");
+              return;
+          }
+          //
+          // If this were a real app, we would make a call to send the username / password
+          // to the login service, through the window.secureAjax object.
+          //
+          document.getElementById('loginform').style.display='none';
+          document.getElementById('frm').style.display='';
+			    document.getElementById('getimage').style.display='';
+			    document.getElementById('loadpage').style.display='';
+			    document.getElementById('loadscript').style.display='';			      
+      });
+  }
+  </script>
+  <style>
+      .modalBlocker {position:absolute; left:0; top:0; width:100%; height:100%; background:#000000; opacity:0.3; filter:alpha(opacity=30); display:none}
+  </style>
+  </head>
+  <body>
+      <form id='loginform' method='#' type='post' onSubmit='doLogin(); return false;'>
+      <h4> Please Log In </h4>
+      <table>
+      <tr><td><b> Username </b></td><td><input type='text' name='username'></td></tr>      
+      <tr><td colspan=2 align='top'><input type='submit' name='Login' value='Login' onClick='doLogin(); return false;'></td></tr>
+      </table>
+      </form>     
+      <div id='ind'> </div>
+      <form id='frm' method="#" type='post' style='display:none'>
+          <h4> Secure Ajax Echo Test... </h4>
+          <table>
+          <tr><td valign='top'>Input:</td><td><textarea id='input' name='input' rows='5' cols='20' ></textarea></td></tr>
+          <tr><td colspan=2><center><button type='button' id='send' name='send' onClick='sendSecure();'>Send</button></center><br></td></tr>
+          <tr><td valign='top'>Echo:</td><td><textarea id='echo' name='echo' rows='5' cols='20' ></textarea></td></tr>                    
+          </table>
+          <div id='logmsg'></div>
+      </form>
+	  <div id='imgtgt'> 
+	  </div>
+	  <button type='button' id='getimage' name='getimage' onClick='getSecureImg("test.jpg");' style='display:none'>Get Image</button>
+	  <button type='button' id='loadpage' name='loadpage' onClick='loadPageSecure();' style='display:none'>Load Page</button>
+	  <button type='button' id='loadscript' name='loadscript' onClick='loadScriptSecure();' style='display:none'>Load a Script</button>
+  </body>
+</html>
