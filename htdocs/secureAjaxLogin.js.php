@@ -1,6 +1,6 @@
 <?php
     //
-    // Secure Ajax Layer Copyright (c) 2008 - 2009 Brad Broerman. bbroerman@bbroerman.net
+    // Secure Ajax Layer Copyright (c) 2008 - 2009 Brad Broerman. bbroerman@bbroerman.net released under the LGPL 2.1 license
     // BigInt library Copyright 1998-2005 David Shapiro. dave@ohdave.com
     // RSA Javascript library Copyright 1998-2005 David Shapiro. dave@ohdave.com
     // SHA-1 Javascript library Copyright Paul Johnston 2000 - 2002.
@@ -8,7 +8,20 @@
     //     Distributed under the BSD License See http://pajhome.org.uk/crypt/md5 for details. */
     // AES Javascript library Copyright Chris Veness 2005-2008. Right of free use is granted for all.
     //
-
+    // This library is free software; you can redistribute it and/or
+    // modify it under the terms of the GNU Lesser General Public
+    // License as published by the Free Software Foundation.
+    // 
+    // This library is distributed in the hope that it will be useful,
+    // but WITHOUT ANY WARRANTY; without even the implied warranty of
+    // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    // Lesser General Public License for more details. 
+    // 
+    // You should have received a copy of the GNU Lesser General Public
+    // License along with this library; if not, write to the Free Software
+    // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+    //
+    
     require_once("/www/sites/secureajaxtest/etc/secureAjaxConfig.php");
     require_once( $secureAjaxConfig['INCDIR'] . "secureajax_helper.php");
     require_once( $secureAjaxConfig['INCDIR'] . "class.JavaScriptPacker.php");
