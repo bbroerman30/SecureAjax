@@ -4,6 +4,17 @@ Secure Ajax Layer
   For a very long time now, internet transactions that require secure channels have relied on SSL and TLS implemented in the web browser and in the web server. These technologies rely on trusted third parties to provide and authenticate certificates which are used to validate the identity of the server that a given client is connecting to. For years now, these trusted parties have taken short cuts that have undermined the security of the internet, and have allowed numerous attackers to generate certificates that mimic valid sites and allow unsuspecting customers to be spied upon. TLS and SSL negotiation protocols have also been attacked with various success as well. Additionally, browsers have been attacked time and time again, most notably Internet Explorer, still used by over 50% of internet users, which employs a plug-in to provide secure communications. This plug-in can be replaced with a compromised version by viruses or other malware. Additionally other browsers, though much more secure, may also become infected with viruses and malware that could allow prying eyes to see private communications or allow attackers to gain access to ecommerce, banking, or other services that the users would think are secure. Finally, obtaining certificates are very expensive for small website developers.
 
   To help solve these problems, I have developed SecureAjax. This is a library that is loaded from a server in a secure manner, sits on top of all client-side installed code (browser, plugins, or operating system) to provide another layer of security. This library is cheaper than an SSL certificate, and provides real secure communications for web applications.
+  
+  Future expansion on this library will include:
+  <ul>
+    <li> Loading of CSS images as data urls.
+    <li> PHP plugin version (all written in C/C++)
+    <li> JAVA Servlet / Jar version of SecureAjax for J2EE applications
+    <li> bug fixes as necessary.
+  </ul>
+  
+  If you have any suggestions for this project, please feel free to email me. I will add anything that makes sense as I have the available time.
+  
 
 Point By Point
 ==============
@@ -36,8 +47,8 @@ Why did I make this?
  <LI>	HTTPS and SSL only authenticate the server to the client, not the client to the server. This library authenticates both at the same time. 
 </UL>
 
-Features:
-=================
+Features
+========
 <UL>
  <LI>	Uses AES-256 for communications, with 128 bit RSA signatures. 
  <LI>	Encryption keys are randomly generated per session, and can be renegotiated as needed. 
@@ -53,7 +64,7 @@ Features:
 </UL>
 
 Libraries Used 
-===============
+==============
 In the making of this project, I used several JavaScript and C open-source libraries and application examples.
 The original copyright notices have been kept in the C source, or in the Javascript files in the js_src directory
 <ul>
@@ -66,7 +77,7 @@ The original copyright notices have been kept in the C source, or in the Javascr
 </ul>
 
 How it Works 
-=================
+============
   The Secure Ajax Library is comprised of 4 PHP webservices, a PHP library, and a PHP server template that can be used as the model for your secure webservices. These scripts together implement the Secure Ajax Layer protocol. 
   
   The 4 webservices are the login script bootloader, the SecureAjax code server, the key server, and an API service for loading pages, scripts, stylesheets, and images securely.
