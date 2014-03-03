@@ -140,31 +140,31 @@ To configure SecureAjax, simply
 Optionally, if you are using the pure PHP implementation on your server (that is, you can not install the GMP plug-in library, and you can not use the C applications for RSA, and Diffie Hellman) you should consider pre-generating your RSA keys. There is a file in the etc directory called makeRSAkeys.php. You should use this on your development box, or on the command line of your server, to pre-generate your RSA keys. This script may be configured to use a GMP based version of the key generator, the C version, or a pure PHP version. If using windows, you should download and configure WampServer (a PHP server for windows) or configure a linux virtual box. Either way, once configured, you call the makeRSAkeys.php with the number of key entries to be generated as a command line argument. It will output a PHP script to STDOUT.  You can run it in this configuration for testing, and once satisfied, you can redirect the output to rsakeys.php (the default file for pre-generated RSA keys). Please make sure to generate a LARGE array (lots of keys). The more keys you have, the more secure your application and the less often you will need to regenerate the file. If using pre-generated keys, this file should be regenerated periodically.
 
 SecureAjax comes with a test application. To use this application, update the script include in index.html in the htdocs directory to point to your server name:
-<PRE>
-&LT;script type='text/javascript' src='http://archdev.localhost.com/secureAjaxLogin.js.php'&GT; &LT;/script&GT;
-</PRE>
+~~~html
+<script type='text/javascript' src='http://archdev.localhost.com/secureAjaxLogin.js.php'> </script>
+~~~
 You will also need to update the require_once in the SecureAjaxTestSvr.php script to point to the proper location for secureAjaxConfig.php.
 
 Writing your own APIs 
 =====================
 Constructing APIs in SecureAjax is very simple. The JavaScript library makes no assumptions about the contents of a message. It can be JSON, XML, Text or any other format. The message is sent to the server by calling window.secureAjax.sendSecureMessage() and passing a string message ( either XML string, or JSON formatted string ) and a callback function. On the server side, call either the helper function getMessage() to retrieve the string send by the client, or you can do it yourself with:
-<PRE>
+~~~php
 if( isSet($_POST['msg']) && strlen($_POST['msg']) > 0 )    {
     $decoded = decryptMessage( $_POST['msg'] );
     return $decoded;
 }
 return false;
-</PRE>
+~~~
 
 Sending the response back to the client is fairly simple as well. You can either use the helper method sendResponse() or you can do it yourself with:
-<PRE>
+~~~php
 $responseData = encryptResponse( $message );
 if( false !== $responseData ) {
     print( $responseData );
     return true;
 }
 return false;
-</PRE>
+~~~
 
 The helper functions are defined in secureajax_helper.php and can be renamed to anything that meets your needs.
 
@@ -192,7 +192,7 @@ Example Usage
 =============
 
 Example JavaScript API call (With XML response):
-<PRE>
+~~~javascript
 window.secureAjax.sendSecureMessage( "/SecureAjaxTestSvr.php", 
   "input=" + text, 
   function( doc ) {
@@ -201,16 +201,15 @@ window.secureAjax.sendSecureMessage( "/SecureAjaxTestSvr.php",
       document.getElementById('form').echo.value = getTextNode(resp);
     }
   } );
-</PRE>
+~~~
 
 Example page with login:
-<PRE>
-&LT;PRE&GT;
-&LT;html&GT;
-  &LT;head&GT;
-    &LT;title&GT; Secure Ajax Communications Test &LT;/title&GT;
-    &LT;script type='text/javascript' src='http://archdev.localhost.com/secureAjaxLogin.js.php'&GT;&LT;/script&GT;
-    &LT;script type='text/javascript'&GT;
+~~~html
+<html>
+  <head>
+    <title> Secure Ajax Communications Test </title>
+    <script type='text/javascript' src='http://archdev.localhost.com/secureAjaxLogin.js.php'></script>
+    <script type='text/javascript'>
 function doLogin() {
    	  var username = document.getElementById('loginform').username.value;        
         showWaitCursor();
@@ -223,39 +222,39 @@ function doLogin() {
           window.secureAjax.loadPage("Admin_files/securepage.html");
         }
       };
-    &LT;/script&GT;
-  &LT;/head>
-  &LT;body>
-    &LT;form id='loginform' method='#' type='post' onSubmit='doLogin(); return false;'>
-      &LT;h4> Please Log In &LT;/h4>
-      &LT;table&GT;
-        &LT;tr&GT;&LT;td&GT;&LT;b&GT; Username &LT;/b&GT;&LT;/td&GT;&LT;td&GT;&LT;input type='text' name='username'&GT;&LT;/td&GT;&LT;/tr&GT;      
-        &LT;tr&GT;&LT;td colspan=2 align='top'&GT;&LT;input type='submit' name='Login' value='Login' onClick='doLogin(); return false;'&GT;&LT;/td&GT;&LT;/tr&GT;
-      &LT;/table&GT;
-    &LT;/form&GT;
-  &LT;/body&GT;
-&LT;/html&GT;  
-&LT;/PRE&GT;
-</PRE>
+    </script>
+  </head>
+  <body>
+    <form id='loginform' method='#' type='post' onSubmit='doLogin(); return false;'>
+      <h4> Please Log In </h4>
+      <table>
+        <tr><td><b> Username </b></td><td><input type='text' name='username'></td></tr>      
+        <tr><td colspan=2 align='top'><input type='submit' name='Login' value='Login' onClick='doLogin(); return false;'></td></tr>
+      </table>
+    </form>
+  </body>
+</html> 
+~~~
+
 Example secure page (with loadable scripts/stylesheet):
-<PRE>
-&LT;PRE&GT;
-&LT;html&GT;
-  &LT;head&GT;
-    &LT;!-- This loads first, from &LT;secure docs&GT;/Admin_files/xaramenu.js --&GT;
-    &LT;script id='xaramenu' type='text/javascript' src='secure://Admin_files/xaramenu.js'&GT;&LT;/script&GT;
-    &LT;!-- This loads next, from docs&GT;/Admin_files/admin.css --&GT;
-    &LT;link rel='stylesheet' href='secure://Admin_files/admin.css'/&GT;
-  &LT;/head&GT;
-  &LT;body onLoad='alert("doc onload");'&GT;
 
-    &LT;div&GT;  Main body content here &LT;/div&GT; 
+~~~html
+<html>
+  <head>
+    <!-- This loads first, from <secure docs>/Admin_files/xaramenu.js -->
+    <script id='xaramenu' type='text/javascript' src='secure://Admin_files/xaramenu.js'></script>
+    <!-- This loads next, from docs>/Admin_files/admin.css -->
+    <link rel='stylesheet' href='secure://Admin_files/admin.css'/>
+  </head>
+  <body onLoad='alert("doc onload");'>
+
+    <div>  Main body content here </div> 
 
 
-    &LT;div id='menutgt'&GT;
-      &LT;!-- This loads after xaramenu above is all loaded --&GT;
-      &LT;script id='admin_navbar' required='xaramenu' type='text/javascript' src='secure://Admin_files/admin_hnavbar.js'&GT;&LT;/script&GT;                            
-    &LT;/div&GT;	
-  &LT;/body&GT;
-&LT;/html&GT;
-</PRE>
+    <div id='menutgt'>
+      <!-- This loads after xaramenu above is all loaded -->
+      <script id='admin_navbar' required='xaramenu' type='text/javascript' src='secure://Admin_files/admin_hnavbar.js'></script>                            
+    </div>	
+  </body>
+</html>
+~~~
