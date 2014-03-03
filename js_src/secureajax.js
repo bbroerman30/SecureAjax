@@ -1,3 +1,26 @@
+    //
+    // Secure Ajax Layer Copyright (c) 2008 - 2009 Brad Broerman. bbroerman@bbroerman.net released under the LGPL 2.1 license
+    // BigInt library Copyright 1998-2005 David Shapiro. dave@ohdave.com
+    // RSA Javascript library Copyright 1998-2005 David Shapiro. dave@ohdave.com
+    // SHA-1 Javascript library Copyright Paul Johnston 2000 - 2002.
+    // Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
+    // Distributed under the BSD License See http://pajhome.org.uk/crypt/md5 for details. */
+    // AES Javascript library Copyright Chris Veness 2005-2008. Right of free use is granted for all.
+    //
+    // This library is free software; you can redistribute it and/or
+    // modify it under the terms of the GNU Lesser General Public
+    // License as published by the Free Software Foundation.
+    //
+    // This library is distributed in the hope that it will be useful,
+    // but WITHOUT ANY WARRANTY; without even the implied warranty of
+    // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    // Lesser General Public License for more details.
+    //
+    // You should have received a copy of the GNU Lesser General Public
+    // License along with this library; if not, write to the Free Software
+    // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+    //
+    
 function bbSecureAjaxLayer() {
 	// used for internal methods, as the this pointer may not always work in JavaScript.
 	var that=this;
@@ -39,7 +62,7 @@ function bbSecureAjaxLayer() {
 	// see http://csrc.nist.gov/publications/PubsFIPS.html#197
 	function bbSecureAjaxAESHelper() 
 	{
-		// Sbox is pre-computed multiplicative inverse in GF(2^8) used in SubBytes and KeyExpansion [§5.1.1]
+		// Sbox is pre-computed multiplicative inverse in GF(2^8) used in SubBytes and KeyExpansion [ï¿½5.1.1]
 		var Sbox=[99,124,119,123,242,107,111,197,48,1,103,43,254,215,171,118,202,130,201,125,250,89,
 		          71,240,173,212,162,175,156,164,114,192,183,253,147,38,54,63,247,204,52,165,229,241,
 		          113,216,49,21,4,199,35,195,24,150,5,154,7,18,128,226,235,39,178,117,9,131,44,26,27,
@@ -52,7 +75,7 @@ function bbSecureAjaxLayer() {
 		          181,102,72,3,246,14,97,53,87,185,134,193,29,158,225,248,152,17,105,217,142,148,155,
 		          30,135,233,206,85,40,223,140,161,137,13,191,230,66,104,65,153,45,15,176,84,187,22];
 
-		// Rcon is Round Constant used for the Key Expansion [1st col is 2^(r-1) in GF(2^8)] [§5.2]          
+		// Rcon is Round Constant used for the Key Expansion [1st col is 2^(r-1) in GF(2^8)] [ï¿½5.2]          
 		var Rcon=[[0,0,0,0],[1,0,0,0],[2,0,0,0],[4,0,0,0],
 		          [8,0,0,0],[16,0,0,0],[32,0,0,0],[64,0,0,0],
 		          [128,0,0,0],[27,0,0,0],[54,0,0,0]];
@@ -234,7 +257,7 @@ function bbSecureAjaxLayer() {
 			return f;
 		};
 
-		// apply SBox to state S [§5.1.1]
+		// apply SBox to state S [ï¿½5.1.1]
 		function SubBytes( s, a )
 		{
 			for( var r = 0; r < 4; r++ )
@@ -248,7 +271,7 @@ function bbSecureAjaxLayer() {
 			return s;
 		};
 
-		// shift row r of state S left by r bytes [§5.1.2]
+		// shift row r of state S left by r bytes [ï¿½5.1.2]
 		function ShiftRows( s, a )
 		{
 			var t = new Array( 4 );
@@ -269,7 +292,7 @@ function bbSecureAjaxLayer() {
 		};
 
 
-		// combine bytes of each col of state S [§5.1.3]
+		// combine bytes of each col of state S [ï¿½5.1.3]
 		function MixColumns( s, a )
 		{
 			for( var c = 0; c < 4; c++ )
@@ -292,7 +315,7 @@ function bbSecureAjaxLayer() {
 			return s;
 		};
 
-		// xor Round Key into state S [§5.1.4]
+		// xor Round Key into state S [ï¿½5.1.4]
 		function AddRoundKey( a, w, b, c )
 		{
 			for( var r = 0; r < 4; r++ )
@@ -422,7 +445,7 @@ function bbSecureAjaxLayer() {
 			g = g.concat( g.slice( 0, e - 16 ) );
 
 			//
-			// initialise counter block (NIST SP800-38A §B.2): millisecond time-stamp for nonce in 1st 8 bytes,
+			// initialise counter block (NIST SP800-38A ï¿½B.2): millisecond time-stamp for nonce in 1st 8 bytes,
 			// block counter in 2nd 8 bytes
 			//      
 			var h = new Array( d );
