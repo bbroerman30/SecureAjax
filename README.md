@@ -52,6 +52,19 @@ Features:
  <LI>	Cheap, effective, and simple to use!
 </UL>
 
+Libraries Used 
+===============
+In the making of this project, I used several JavaScript and C open-source libraries and application examples.
+The original copyright notices have been kept in the C source, or in the Javascript files in the js_src directory
+<ul>
+ <li>AES implementation in JavaScript (c) Chris Veness 2005-2008 
+ <li>BarrettMu, a class for performing Barrett modular reduction computations in JavaScript. Copyright 2004-2005 David Shapiro
+ <li>BigInt, a suite of routines for performing multiple-precision arithmetic in JavaScript. Copyright 2004-2005 David Shapiro
+ <li>Clearlooks 2 CSS for popup dialog Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ <li>RSA, a suite of routines for performing RSA public-key computations in JavaScript. Copyright 1998-2005 David Shapiro
+ <li>JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined in FIPS PUB 180-1. Version 2.1a Copyright Paul Johnston 2000 - 2002. Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
+</ul>
+
 How it Works 
 =================
   The Secure Ajax Library is comprised of 4 PHP webservices, a PHP library, and a PHP server template that can be used as the model for your secure webservices. These scripts together implement the Secure Ajax Layer protocol. 
