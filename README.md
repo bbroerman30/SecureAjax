@@ -47,6 +47,23 @@ Why did I make this?
  <LI>	HTTPS and SSL only authenticate the server to the client, not the client to the server. This library authenticates both at the same time. 
 </UL>
 
+
+SSL / TLS and Ajax attacks in the news
+======================================
+(Or, why do you need this?)
+
+<ul>
+<li> <a href='http://ideas.4brad.com/overengineering-and-non-deployment-ssl-tls'> The Overengineering and non-deployment of SSL/TLS </a> </li>
+<li> <a href='http://www.wisec.it/en/Docs/1158-Subverting_Ajax.pdf'> Subverting Ajax, Di Paulo & Fedon, December 06 </a> </li>
+<li> <a href='http://research.microsoft.com/apps/pubs/default.aspx?id=79323'> Pretty-Bad-Proxy: An overlooked Adversary in Browsers </a> </li>
+<li> <a href='http://www.wired.com/threatlevel/2009/07/kaminsky/'> Slashdot Article: SSL Certificate Spoofing with a NULL character </a> </li>
+<li> <a href='http://www.darkreading.com/security/app-security/showArticle.jhtml?articleID=218900378'> Flaw in SSL issuing authorities procedures </a></li>
+<li> <a href='http://www.darkreading.com/blog/archives/2009/07/blackhat_day_on.html'> SSL man in the middle attacks </a></li>					
+<li> <a href='http://www.wired.com/threatlevel/2010/03/packet-forensics/'> Law Enforcement Appliance Subverts SSL </a></li>	 
+<li> <a href='http://www.betanews.com/article/Has-SSL-become-pointless-Researchers-suspect-statesponsored-CA-forgery/1269551694'> Researchers suspect state sponsored CA forgery </a></li>	 
+<li> <a href='http://arstechnica.com/security/2014/03/critical-crypto-bug-leaves-linux-hundreds-of-apps-open-to-eavesdropping/'> Critical crypto bug leaves Linux, hundreds of apps open to eavesdropping </a></li>
+</ul>  
+
 Features
 ========
 <UL>
