@@ -23,7 +23,9 @@ $secureAjaxConfig['APIBASEURL'] = "http://archdev.localhost.com/";
 /**
  * Used by SecureAjaxLogin process to retrieve the plain-text password. Note that this password is used by SecureAjax to 
  * prepare the login. This password is NEVER sent out over the wire. In production applications, you should store this 
- * in a database in an encrypted format (AES-256 or better, with a private passcode that is well hidden)
+ * in a database in an encrypted format (AES-256 or better. You could have a static portion of a key in code, and a per-password 
+ * salt stored in the Database. Query the password/salt by userid, combine the salt with the static hard-coded key and
+ * decrypt)
  *
  * @param username - String. The user's login name.
  * @return String - the user's plain text password.
