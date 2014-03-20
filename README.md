@@ -63,6 +63,7 @@ SSL / TLS and Ajax attacks in the news
 <li> <a href='http://www.betanews.com/article/Has-SSL-become-pointless-Researchers-suspect-statesponsored-CA-forgery/1269551694'> Researchers suspect state sponsored CA forgery </a></li>	 
 <li> <a href='http://arstechnica.com/security/2013/08/gone-in-30-seconds-new-attack-plucks-secrets-from-https-protected-pages/'> Gone in 30 seconds: New attack plucks secrets from HTTPS-protected pages </a></li>
 <li> <a href='http://arstechnica.com/security/2014/03/critical-crypto-bug-leaves-linux-hundreds-of-apps-open-to-eavesdropping/'> Critical crypto bug leaves Linux, hundreds of apps open to eavesdropping </a></li>
+<li> <a href='https://www.eff.org/deeplinks/2011/10/how-secure-https-today'> How secure is HTTPS today? How often is it attacked?  </a></li>
 </ul>  
 
 Features
