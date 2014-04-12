@@ -101,10 +101,14 @@ function SecureAjaxLoginObject() {
 												".clearlooks2 .mceStatusbar .mceBottom .mceRight {background:url(img/corners.gif) -24px 0}" + 
 												".clearlooks2 .mceStatusbar .mceBottom span {display:block; left:7px; font-family:Arial, Verdana; font-size:11px; line-height:23px}"; 
 
-	//
-	// This takes the JavaScript for execing and loading the login popup, and places it in the head.
-	// Doing so in an obfuscated way (this functoin name, and its variables will be obfuscated by the loader.
-	// 
+	/**
+	 * This takes the JavaScript for executing and loading the login popup, and places it in the head.
+	 * Doing so in an obfuscated way (this functoin name, and its variables will be obfuscated by the loader.
+	 * 
+	 * @access Private
+	 * @param None
+	 * @returns none
+	 */ 
 	function initJSInsert() { 
 		// Get the head object.
 		var headerDomObj = document.getElementsByTagName( 'aGVhZA=='.decodeBase64())[0];
@@ -157,10 +161,14 @@ function SecureAjaxLoginObject() {
 	function binb2str(a){var b="";var c=(1<<chrsz)-1;for(var i=0;i<a.length*32;i+=chrsz){b+=String.fromCharCode((a[i>>5]>>>(32-chrsz-i%32))&c)}return b}
 	function binb2hex(a){var b=hexcase?"0123456789ABCDEF":"0123456789abcdef";var c="";for(var i=0;i<a.length*4;i++){c+=b.charAt((a[i>>2]>>((3-i%4)*8+4))&15)+b.charAt((a[i>>2]>>((3-i%4)*8))&15)}return c}
 
-	//
-	// Create the standard XMLHTTPRequest object. 
-	// a new object instance is returned for each invocation (allows simultaneous requests)
-	//
+	/**
+	 * Create the standard XMLHTTPRequest object. 
+	 * a new object instance is returned for each invocation (allows simultaneous requests)
+	 * 
+	 * @access Private
+	 * @param None
+	 * @returns None
+	 */
 	function createXHRObject() {
 		if( typeof XMLHttpRequest != "undefined" ) {
 			// Safari, Opera, Mozilla
@@ -174,9 +182,13 @@ function SecureAjaxLoginObject() {
 		}
 	};
 
-	//
-	// Trim whitespace from around a string. 
-	//
+	/**
+	 * Trim whitespace from around a string.
+	 * 
+	 * @access Private
+	 * @param String str - The string to trim.
+	 * @returns String - The string with all leading and trailing whitespace removed. 
+	 */
 	function trim( str ) {
 		return str.replace( /^\s+|\s+$/g, "" );
 	};
@@ -258,8 +270,10 @@ function SecureAjaxLoginObject() {
 		// Past the padding is the encrypted JavaScript
 		cryptext = cryptext.substr( pwl );
 
-		// Sha1 of the salted password is the decryption key.
-		var key = hex_sha1( password );
+		// Iterated Sha256 of the salted password is the decryption key.
+		var key=hexSHA256(password);
+		for(index=0;index<500;++index)
+			key=hexSHA256(key)
 
 		// Finally, decrypt and return the JS code itself.
 		return AESDecryptCtr( cryptext, key, 256 );
@@ -292,9 +306,15 @@ function SecureAjaxLoginObject() {
 		}
 	}
 
-	//
-	// Pick a random element from the DOM (a div, span, or paragraph).
-	//
+	/**
+	 * Pick a random element from the DOM (a div, span, or paragraph).
+	 * 
+	 * @access private
+	 * 
+	 * @param none
+	 * 
+	 * @return A refernce to a randomly selected DIV, SPAN, or Paragraph from the document.
+	 */
 	function getRandomDomItem() { 		
 		var domElementList = []; // Holds the list of DOM items that we're grabbing.
 		
@@ -317,11 +337,22 @@ function SecureAjaxLoginObject() {
 		return domElementList[randomnumber];
 	}
 
-	//
-	// Create the SecureAjax login popup dialog, and attach it to the document body.
-	// The dialog code is based on my inline popups library. The DOM structure of the popup
-	// is based on Moxiecode's MCE popup (so I could use their stylesheet and images)
-	//
+	/**
+	 * Create the SecureAjax login popup dialog, and attach it to the document body.
+	 * The dialog code is based on my inline popups library. The DOM structure of the popup
+	 * is based on Moxiecode's MCE popup (so I could use their stylesheet and images)
+	 * 
+	 * @access private
+	 * 
+	 * @param x - Integer, x position of the popup dialog. Absolutely positioned.
+	 * @param y - Integer, y position of the popup dialog. Absolutely positioned.
+	 * @param width - Integer, width of the popup dialog.
+	 * @param height - Integer, height of the popup dialog.
+	 * @param contentHtml - HTML content to put into the dialog.
+	 * @param parameters - Parameters to send to the popup window (in this case, username and a list of callback functions)
+	 * 
+	 * @return none
+	 */
 	function LoginPopup( x, y, width, height, title, contentHtml, parameters ) {
 		var that=this;
 
@@ -405,10 +436,12 @@ function SecureAjaxLoginObject() {
 		}
 	};
 
-	//
-	// This is a dummy function that looks kind of like the login function. When obfuscated and compacted,
-	// it will help fool attackers. They may not know which one is the actual login script...
-	//
+	/**
+	 * This is a dummy function that looks kind of like the login function. When obfuscated and compacted,
+	 * it will help fool attackers. They may not know which one is the actual login script...
+	 * 
+	 * @access private
+	 */
 	function doDummyMethod1( username, password2, callbackFn ) {
 		var that = this;
 		var cryptext = getTextNode( username.getElementsByTagName( password2 )[0] );
@@ -416,10 +449,12 @@ function SecureAjaxLoginObject() {
 		callbackFn( rstxt );
 	};
 
-	//
-	// This is a dummy function that looks kind of like the login function. When obfuscated and compacted,
-	// it will help fool attackers. They may not know which one is the actual login script...
-	//
+	/**
+	 * This is a dummy function that looks kind of like the login function. When obfuscated and compacted,
+	 * it will help fool attackers. They may not know which one is the actual login script...
+	 * 
+	 * @access private
+	 */
 	function doDummyMethod2( username, password3, callbackFn ) {
 		var that = this;
 		var cryptext = getTextNode( username.getElementsByTagName(password3)[0] );
@@ -427,10 +462,18 @@ function SecureAjaxLoginObject() {
 		callbackFn( rstxt );
 	};
 
-	//
-	//  This function is called when the login popup "Login" button is clicked. It takes the username and pasword
-	//  calls the SecureAkax
-	//
+	/**
+	 *  This function is called when the login popup "Login" button is clicked. It takes the username and pasword
+	 *  calls the SecureAkax
+	 *  
+	 *  @access private
+	 *  
+	 *  @param username - Username as reported by the login popup dialog.
+	 *  @param password - Password as entered into the login popup dialog.
+	 *  @param callbackFn - Callback function (takes one boolean parameter. True if login successful, False otherwise)
+	 *  
+	 *  @return none
+	 */
 	function doLogin( username, password, callbackFn ) { 
 		// Call the SecureAjax.js.php script with the username to get the encrypted SecureAjax script
 		sendAjaxRequest( ApiUrlStr, usrStrText+username, function( DocVerStr ) { 
@@ -453,21 +496,39 @@ function SecureAjaxLoginObject() {
 		});
 	};
 
-	//
-	// This is the method called when performing a login. It will send an AJAX request to the secureAjax request to the
-	// secureAjaxLogin webservice, passing the username, and will insert and execute the login dialog code.
-	// 
+	/**
+	 * This is the method called when performing a login. It will send an AJAX request to the secureAjax request to the
+	 * secureAjaxLogin webservice, passing the username, and will insert and execute the login dialog code.
+	 * 
+	 * @access private
+	 * 
+	 * @param x - Integer, x coordinate for the login popup window. Positioned absolutely.
+	 * @param y - Integer, y coordinate for the login popup window. Positioned absolutely.
+	 * @param username - String, The user's login name.
+	 * @param callback - Function, Called when the login process is complete with one boolean parameter. True if login was successful, false otherwise. 
+	 * 
+	 * @return none
+	 */
 	function doLoginEx( x, y, username, callbackFn ) {
-		sendAjaxRequest( ApiUrlStr, validateStrText + username, function( DocVerStr ){ 
+		sendAjaxRequest( ApiUrlStr, validateStrText + username, function( DocVerStr ) { 
 			loginAjaxCallback( x, y, DocVerStr, callbackFn ); 
 		} );
 	};  
 
-	//
-	// This script sets up the LoginPopup, opens it, and sets up the callbacks for the login and cancel button.
-	// In the main script, this is randomized specially, as each of the callbacks in the list are re-arranged as well
-	// as randomly renamed. 
-	//    
+	/**
+	 * This script sets up the LoginPopup, opens it, and sets up the callbacks for the login and cancel button.
+	 * In the main script, this is randomized specially, as each of the callbacks in the list are re-arranged as well
+	 * as randomly renamed.
+	 *
+	 * @access private
+	 * 
+	 * @param popuplocx - Integer, the x coordinate for the login popup window. Positioned absolutely.
+	 * @param popuplocy - Integer, the y coordinate for the login popup window. Positioned absolutely.
+	 * @param DocVerStr - XML Document containing the response from the SecureAjax Login server.
+	 * @param callbackFn - Called when the login process is complete with one boolean parameter. True if login was successful, false otherwise.
+	 * 
+	 * @return none
+	 */    
 	function loginAjaxCallback( popuplocx, popuplocy, DocVerStr, callbackFn ) {
 		// Ensure we have a good response passed in.
 		if( DocVerStr.getElementsByTagName(responseStr)[0] ) {
@@ -506,11 +567,23 @@ function SecureAjaxLoginObject() {
 		}
 	};   
 
-	// Public API... When called, initialize the mechanism for the login window, and then start the login process.
+	/**
+	 * Public API... When called, initialize the mechanism for the login window, and then start the login process.
+	 * 
+	 * @access public
+	 * 
+	 * @param x - Integer, x coordinate for the login popup window. Positioned absolutely.
+	 * @param y - Integer, y coordinate for the login popup window. Positioned absolutely.
+	 * @param username - String, The user's login name.
+	 * @param callback - Function, Called when the login process is complete with one boolean parameter. True if login was successful, false otherwise. 
+	 * 
+	 * @return none
+	 */
 	this.loginEx = function( x, y, username, callbackFn ) {
 		initJSInsert();
 		doLoginEx( x, y, username, callbackFn );
 	};
 }
 
+// Instantiate and install the login object.
 window.top.secureAjaxLogin = new SecureAjaxLoginObject();

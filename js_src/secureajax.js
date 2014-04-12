@@ -1173,34 +1173,42 @@ function bbSecureAjaxLayer() {
 	//
 	// Load a stylesheet from the SecureAjaxAPIs webservice, and isert it into the head of the document.
 	//
-	function doLoadStyle(scriptname){
-		var msg="<loadStyle name='"+scriptname+"'/>";
-		doSendSecure(serverURL+"SecureAjaxAPIs.php",msg,function(doc){
-			if(doc!=null){
-				var scr=doc.getElementsByTagName('script')[0];
-				if(scr&&scr.getAttribute('type')){
-					var t=scr.attributes.getNamedItem('type').value;
-					if(t.indexOf('text/css')>-1){
+	function doLoadStyle( scriptname ){
+		// Prepare the message with the stylesheet name to load.
+		var msg = "<loadStyle name='" + scriptname + "'/>";
+		
+		// Send the request
+		doSendSecure( serverURL + "SecureAjaxAPIs.php", msg, function( doc ) {
+			if( doc != null ) {
+				
+				// if we have a valid document (It decrypted correctly)
+				var scr = doc.getElementsByTagName( 'script' )[0];
+				if( scr && scr.getAttribute('type') ) {
+					
+					// Get the type, and make sure it's the right type (double checking)
+					var t = scr.attributes.getNamedItem('type').value;
+					if( t.indexOf( 'text/css' ) > -1 ) {
+						
 						// prepare the new style DOM node.
-						var s=document.createElement('style');
-						s.setAttribute("type","text/css");
-						s.setAttribute("saexec","no");
+						var s=document.createElement( 'style' );
+						s.setAttribute( "type", "text/css" );
+						s.setAttribute( "saexec", "no" );
 
 						// Get the contents from the input message.
-						var st=getTextNode(scr);
+						var st=getTextNode( scr );
 
 						// now, IE does things differently than other browsers, so we have do do this
 						// to actually insert the style text.
-						if(s.styleSheet){
-							s.styleSheet.cssText=st;
-						}else{
-							s.appendChild(document.createTextNode(st));
+						if( s.styleSheet ) {
+							s.styleSheet.cssText = st;
+						} else {
+							s.appendChild( document.createTextNode( st ) );
 						}
-						document.getElementsByTagName('head')[0].appendChild(s);
+						document.getElementsByTagName( 'head' )[0].appendChild( s );
 					}
 				}
-			}else{
-				alert("Error: Invalid response from server.");
+			} else {
+				alert( "Error: Invalid response from server." );
 			}
 		});
 	};
@@ -1212,11 +1220,11 @@ function bbSecureAjaxLayer() {
 	// @param {Node} p - the parent DOM node that we will insert the script into.
 	// @param {Node} e - If not null, the DOM node we will insert the script node before.
 	//
-	function insScrptAt(scr,p,e){
-		var s=document.createElement('script');
-		s.setAttribute("type","text/javascript");
-		s.text=scr;
-		p.insertBefore(s,e);
+	function insScrptAt( scr, p, e ) {
+		var s = document.createElement( 'script' );
+		s.setAttribute( "type", "text/javascript" );
+		s.text = scr;
+		p.insertBefore( s, e );
 	};
 
 	//
@@ -1227,35 +1235,47 @@ function bbSecureAjaxLayer() {
 	// innerHTML won't processes these items as they are inserted.
 	//   Also, if an onLoad attribute is set on the body, eval the code when we're all done. 
 	//
-	function doLoadPage(pagename){
-		var msg="<loadPage name='"+pagename+"'/>";
-		doSendSecure(serverURL+"SecureAjaxAPIs.php",msg,function(doc){
-			if(doc!=null){
-				var scr=doc.getElementsByTagName('document')[0];
-				if(scr){
+	function doLoadPage( pagename ) {
+		
+		// Prepare the message with the name of the page to load.
+		var msg = "<loadPage name='" + pagename + "'/>";
+		
+		// Send the request
+		doSendSecure( serverURL + "SecureAjaxAPIs.php", msg, function( doc ) {
+			if( doc != null ) {
+				
+				// If we got back a good document (It dectypted correctly)
+				// Make sure we have a good type
+				var scr = doc.getElementsByTagName( 'document' )[0];
+				if( scr ) {
+					
 					// process the head. We only care about link, style, and script tags.
-					insHdrScr(scr.getElementsByTagName('head')[0]);
+					insHdrScr( scr.getElementsByTagName( 'head' )[0] );
 
 					// Set the body HTML. This method is faster than building the nodes, or document.write.
-					document.body.innerHTML = getTextNode(scr.getElementsByTagName('body')[0]);
+					document.body.innerHTML = getTextNode( scr.getElementsByTagName( 'body' )[0] );
 
 					// But we have the side-effect of not running JavaScripts that are embedded.
-					runScripts(document.body);
+					runScripts( document.body );
 
 					// Now, if he body has an onLoad script, execute it.
-					if(scr.getElementsByTagName('body')[0].getAttribute('onLoad')){
+					if( scr.getElementsByTagName( 'body' )[0].getAttribute( 'onLoad' ) ) {
 
-						// IF scripts are still loading, put the script in the scriptDependencyCache
-						var contents = scr.getElementsByTagName('body')[0].getAttribute('onLoad');
-						if(scriptStillLoading()){
-							scriptDependencyCache['body_onload']={
-									req:getScriptCacheIds(), text:contents, callback:function(scr){
-										eval(scr);
+						// Get the code for the script...
+						var contents = scr.getElementsByTagName( 'body' )[0].getAttribute( 'onLoad' );
+						
+						// If other scripts are still loading, put the script in the scriptDependencyCache
+						if( scriptStillLoading() ) {
+							scriptDependencyCache['body_onload'] = {
+									req: getScriptCacheIds(), 
+									text: contents, 
+									callback: function( scr ) {
+										eval( scr );
 									}
 							};
-
-						}else{
-							eval(contents);
+						} else {
+							// Otherwise, if they're all done, go ahead and run the script.
+							eval( contents );
 						}
 					}
 				}
@@ -1267,19 +1287,19 @@ function bbSecureAjaxLayer() {
 	// Process the incoming Node structure and insert the appropriate nodes into the 
 	// document header. This clears the original contents of the header as well.
 	//
-	function insHdrScr(src){
+	function insHdrScr( src ){
 		// get a pointer to the head node.
-		var hdr=document.getElementsByTagName('head')[0];
+		var hdr = document.getElementsByTagName( 'head' )[0];
 
 		// Delete all child elements in the head if any.
-		if(hdr.hasChildNodes()){
-			while(hdr.childNodes.length>=1){
-				hdr.removeChild(hdr.firstChild);
+		if( hdr.hasChildNodes() ) {
+			while( hdr.childNodes.length >= 1 ) {
+				hdr.removeChild( hdr.firstChild );
 			}
 		}
 
 		// If there are no new scripts, leave it with an empty head.
-		if(!src){
+		if( !src ){
 			return;
 		}
 
@@ -1288,72 +1308,78 @@ function bbSecureAjaxLayer() {
 		// is a quick and easy way to turn the incoming string representation of the 
 		// node structure into DOM nodes that we can iterate across..
 		//
-		var dn=document.createElement('div');
-		dn.innerHTML="<div>&nbsp;</div>"+getTextNode(src);
+		var dn=document.createElement( 'div' );
+		dn.innerHTML = "<div>&nbsp;</div>" + getTextNode( src );
 
 		// Iterate across all nodes. There won't be any inner nodes, so no recursion is needed.
-		var n=dn.firstChild;
-		while(n){
-			if(n.nodeType==1){
-				var s=null;
-				if(n.tagName.toLowerCase()=='script'){
-					s=createScriptNode(n,hdr,null);
-				}else if(n.tagName.toLowerCase()=='style'){
-					if(!n.getAttribute("saexec")){
-						// Create the style node.
-						s=document.createElement('style');
-						s.setAttribute("type","text/css");
-						var st=getTextNode(n);
+		var n = dn.firstChild;
+		while( n ) {
+			if( n.nodeType == 1 ) {
+				var s = null;
+				if( n.tagName.toLowerCase() == 'script' ) {
+					// Create a javaScript node.
+					s = createScriptNode( n, hdr, null );
+				} else if( n.tagName.toLowerCase() == 'style' ) {
+					// Create the style node.
+					if( !n.getAttribute( "saexec" ) ) {
+						s = document.createElement( 'style' );
+						s.setAttribute( "type", "text/css" );
+
+						var st = getTextNode( n );
 
 						// Get the text to place in it.
-						if(!st)st=n.innerHTML;
+						if( !st )
+							st = n.innerHTML;
 
 						// Then insert the text into the style node (cross-browser)
-						if(s.styleSheet){
-							s.styleSheet.cssText=st;
-						}else{
-							s.appendChild(document.createTextNode(st));
+						if( s.styleSheet ) {
+							s.styleSheet.cssText = st;
+						} else {
+							s.appendChild( document.createTextNode( st ) );
 						}
 					}
-				} else if(n.tagName.toLowerCase()=='link') {
+				} else if( n.tagName.toLowerCase() == 'link' ) {
 					// Process a link node (loaded stylesheet)
-					s=document.createElement('link');
-					if(n.getAttribute('type')){
-						s.type =n.type;
+					s = document.createElement( 'link' );
+					if( n.getAttribute( 'type' ) ) {
+						s.type = n.type;
 					}
-					if(n.getAttribute('media')){
-						s.media=n.media;
+					
+					if( n.getAttribute( 'media' ) ) {
+						s.media = n.media;
 					}
-					if(n.getAttribute('rel')){
-						s.rel=n.rel;
+					
+					if( n.getAttribute( 'rel' ) ) {
+						s.rel = n.rel;
 					}
-					if(n.getAttribute('href')){
+					
+					if( n.getAttribute( 'href' ) ) {
 						//
 						// Check to see if the stylesheet is to be loaded by SecureAjax or 
 						// directly by the browser.
 						//
-						var src=n.href;
-						var strt = src.indexOf("secure://");
-						if(strt==0){
+						var src = n.href;
+						var strt = src.indexOf( "secure://" );
+						if( strt == 0 ) {
 							// If loaded by SecureAjax, make the server call
-							doLoadStyle(src.substring(strt+9));
-							s=null;
-						}else{
+							doLoadStyle( src.substring( strt + 9 ) );
+							s = null;
+						} else {
 							// Else, if it's external, just set the src.
-							s.setAttribute("src",src);
+							s.setAttribute( "src", src );
 						}
 					}
 				}
 
 				// If we have a node to insert into the head, do so.
-				if(s!=null){
-					hdr.appendChild(s);
-					s=null;
+				if( s != null ) {
+					hdr.appendChild( s );
+					s = null;
 				}
 			}
 
 			// continue iteration...
-			n=n.nextSibling;
+			n = n.nextSibling;
 		}
 	};
 
@@ -1364,16 +1390,26 @@ function bbSecureAjaxLayer() {
 	// re-add it (above the current node) so that the browser will execute it. Also
 	// allow scripts to be loaded externally.
 	//
-	function runScripts(e){
-		if(e.nodeType!=1){
+	function runScripts( e ) {
+		
+		// If we're not an element node, skip it.
+		if( e.nodeType != 1 ) {
 			return;
 		}
-		if(e.tagName.toLowerCase()=='script'){
-			s=createScriptNode(e,e.parentNode,e);
-			if(s!=null){
-				e.parentNode.insertBefore(s,e);
+		
+		// If the current node is a script tag,
+		if( e.tagName.toLowerCase() == 'script' ) {
+			
+			// Create the new node, and load script (load script if secure, or just set src if not) 
+			s=createScriptNode( e, e.parentNode, e );
+			
+			// If it was created / loaded successfully, insert it into the dom.
+			if( s != null ) {
+				e.parentNode.insertBefore( s, e );
 			}
+			
 		}else{
+			// Else (if not a script node), iterate through that node recursively looking for scripts.
 			var n=e.firstChild;
 			while(n){
 				if(n.nodeType==1){
@@ -1384,12 +1420,28 @@ function bbSecureAjaxLayer() {
 		}
 	};
 
-	function createScriptNode(n,insrt,instbef){
+	/**
+	 * Create a script node based on node n, wiht a parent of insrt, and insert that node before instbef.
+	 * If the node is a secure script, call the webservice to load it, else just set the src and let the browser load it.
+	 * 
+	 * @access Private
+	 * @param Node n -
+	 * @param Node insrt -
+	 * @param Node instbef -
+	 * @returns Node - Reference to the new node.
+	 */
+	function createScriptNode( n, insrt, instbef ) {
+		
+		// Create the script element and set it's type
 		var s=document.createElement('script');
 		s.setAttribute("type","text/javascript");
+		
+		// Now, check the src to see if it's secure or not.
 		if(n.getAttribute('src')){
-			var src=n.getAttribute('src');
-			var strt=src.indexOf("secure://");
+			
+			var src = n.getAttribute('src');
+			var strt = src.indexOf("secure://");
+			
 			if(strt==0){
 				var id=n.getAttribute('id');
 				var req=n.getAttribute('required');
