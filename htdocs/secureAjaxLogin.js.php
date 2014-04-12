@@ -100,11 +100,11 @@ var hexcase=0;
 var chrsz=8;
 var inserttextstr="<?php print(printEncryptOdd($evalFuncStr,$executeScriptKey));?>";
 function hex_sha1(wk1){return binb2hex(core_sha1(str2binb(wk1),wk1.length*chrsz))}
-function Cipher(a,w){var b=4;var c=w.length/b-1;var d=[[],[],[],[]];for(var i=0;i<4*b;i++){d[i%4][Math.floor(i/4)]=a[i]}d=AddRoundKey(d,w,0,b);for(var e=1;e<c;e++){d=SubBytes(d,b);d=ShiftRows(d,b);d=MixColumns(d,b);d=AddRoundKey(d,w,e,b)}d=SubBytes(d,b);d=ShiftRows(d,b);d=AddRoundKey(d,w,c,b);var f=new Array(4*b);for(var i=0;i<4*b;i++){f[i]=d[i%4][Math.floor(i/4)]}return f}
-function SubBytes(s,a){for(var r=0;r<4;r++){for(var c=0;c<a;c++){s[r][c]=Sbox[s[r][c]]}}return s}
-function ShiftRows(s,a){var t=new Array(4);for(var r=1;r<4;r++){for(var c=0;c<4;c++){t[c]=s[r][(c+r)%a]}for(var c=0;c<4;c++){s[r][c]=t[c]}}return s}
-function MixColumns(s,a){for(var c=0;c<4;c++){var b=new Array(4);var d=new Array(4);for(var i=0;i<4;i++){b[i]=s[i][c];d[i]=s[i][c]&128?s[i][c]<<1^283:s[i][c]<<1}s[0][c]=d[0]^b[1]^d[1]^b[2]^b[3];s[1][c]=b[0]^d[1]^b[2]^d[2]^b[3];s[2][c]=b[0]^b[1]^d[2]^b[3]^d[3];s[3][c]=b[0]^d[0]^b[1]^b[2]^d[3]}return s}
-function AddRoundKey(a,w,b,c){for(var r=0;r<4;r++){for(var d=0;d<c;d++){a[r][d]^=w[b*4+d][r]}}return a}
+function Cipher(wk1,wk3){var wk4=4;var wk5=wk3.length/wk4-1;var wk7=[[],[],[],[]];for(var wk8=0;wk8<4*wk4;wk8++){wk7[wk8%4][Math.floor(wk8/4)]=wk1[wk8]}wk7=AddRoundKey(wk7,wk3,0,wk4);for(var wk8=1;wk8<wk5;wk8++){wk7=SubBytes(wk7,wk4);wk7=ShiftRows(wk7,wk4);wk7=MixColumns(wk7,wk4);wk7=AddRoundKey(wk7,wk3,wk8,wk4)}wk7=SubBytes(wk7,wk4);wk7=ShiftRows(wk7,wk4);wk7=AddRoundKey(wk7,wk3,wk5,wk4);var wk9=new Array(4*wk4);for(var wk8=0;wk8<4*wk4;wk8++){wk9[wk8]=wk7[wk8%4][Math.floor(wk8/4)]}return wk9}
+function SubBytes(wk2,wk1){for(var wk6=0;wk6<4;wk6++){for(var wk5=0;wk5<wk1;wk5++){wk2[wk6][wk5]=Sbox[wk2[wk6][wk5]]}}return wk2}
+function ShiftRows(wk2,wk1){var wkc=new Array(4);for(var wk6=1;wk6<4;wk6++){for(var wk5=0;wk5<4;wk5++){wkc[wk5]=wk2[wk6][(wk5+wk6)%wk1]}for(var wk5=0;wk5<4;wk5++){wk2[wk6][wk5]=wkc[wk5]}}return wk2}
+function MixColumns(wk2,wk1){for(var wk5=0;wk5<4;wk5++){var wk4=new Array(4);var wk7=new Array(4);for(var wk8=0;wk8<4;wk8++){wk4[wk8]=wk2[wk8][wk5];wk7[wk8]=wk2[wk8][wk5]&128?wk2[wk8][wk5]<<1^283:wk2[wk8][wk5]<<1}wk2[0][wk5]=wk7[0]^wk4[1]^wk7[1]^wk4[2]^wk4[3];wk2[1][wk5]=wk4[0]^wk7[1]^wk4[2]^wk7[2]^wk4[3];wk2[2][wk5]=wk4[0]^wk4[1]^wk7[2]^wk4[3]^wk7[3];wk2[3][wk5]=wk4[0]^wk7[0]^wk4[1]^wk4[2]^wk7[3]}return wk2}
+function AddRoundKey(wk1,wk3,wk4,wk5){for(var wk6=0;wk6<4;wk6++){for(var wk7=0;wk7<wk5;wk7++){wk1[wk6][wk7]^=wk3[wk4*4+wk7][wk6]}}return wk1}
 function KeyExpansion(a){var b=4;var c=a.length/4;var d=c+6;var w=new Array(b*(d+1));var e=new Array(4);for(var i=0;i<c;i++){var r=[a[4*i],a[4*i+1],a[4*i+2],a[4*i+3]];w[i]=r}for(var i=c;i<(b*(d+1));i++){w[i]=new Array(4);for(var t=0;t<4;t++){e[t]=w[i-1][t]}if(i%c==0){e=SubWord(RotWord(e));for(var t=0;t<4;t++){e[t]^=Rcon[i/c][t]}}else{if(c>6&&i%c==4){e=SubWord(e)}}for(var t=0;t<4;t++){w[i][t]=w[i-c][t]^e[t]}}return w}
 function SubWord(wk1){for(var wk3=0;wk3<4;wk3++){wk1[wk3]=Sbox[wk1[wk3]]}return wk1}
 function RotWord(wk1){var wk2=wk1[0];for(var wk3=0;wk3<3;wk3++){wk1[wk3]=wk1[wk3+1]}wk1[3]=wk2;return wk1}
@@ -252,7 +252,7 @@ this.loginEx=function(x,y,username,callbackFn){initJSInsert();doLoginEx(x,y,user
                        "newElement","targetElement","parentDomNode","getRandomDomItem","domElementList","nodeList","randomnumber","ClerLooks2Style","clearlooks2","mceWrapper", "mceEventBlocker", 
                        "mcePlaceHolder", "clearlooks2_modalBlocker","mceTop", "mceLeft", "mceCenter", "mceRight", "mceFocus", "mceMiddle", "mceContent", "mceBottom", "mceStatusbar","horizontalGif","verticalGif","cornersGif",
                        "toHexStr","ROTR","Sigma0","Sigma1","sigma0","sigma1","Maj","hash","msg","utf8encode","hexSHA256","HashTable","NumBlocks","Konstants",
-                       "MsgBlocks","indx","innridx","MsgSched","TMP1","TMP2","wk1","wk2","wk3","wk4","wk5","wk6","wk7","wk8","wk9","msglength","rounds","addCharCode","getMsgLength","InitHashTable");
+                       "MsgBlocks","indx","innridx","MsgSched","TMP1","TMP2","wk1","wk2","wk3","wk4","wk5","wk6","wk7","wk8","wk9","wka","wkb","wkc","wkd","wke","msglength","rounds","addCharCode","getMsgLength","InitHashTable");
 
     //
     // Now, for each keyword, generate a unique 6 digit hexidecimal name
