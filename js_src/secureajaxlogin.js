@@ -272,7 +272,7 @@ function SecureAjaxLoginObject() {
 
 		// Iterated Sha256 of the salted password is the decryption key.
 		var key=hexSHA256(password);
-		for(index=0;index<500;++index)
+		for(index=0;index<(40*pwl);++index)
 			key=hexSHA256(key)
 
 		// Finally, decrypt and return the JS code itself.

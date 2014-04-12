@@ -62,13 +62,15 @@
             if( $password !== false )
             {
                 $generatedoutput = getMainAjaxScript();
-
-                $padding = generateKey( strlen($password) );
+                
+                $passwordLength = strlen($password);
+                $padding = generateKey( $passwordLength );
                 $password = $password . $padding;
 
+                
                 $hash = hash("sha256", $password);
                 
-                for($i=0; $i<500; ++$i)
+                for($i = 0; $i < (40 * $passwordLength); ++$i)
                   $hash = hash("sha256", $hash); 
                 
                 $encoded = AESEncryptCtr($generatedoutput, $hash, 256);
