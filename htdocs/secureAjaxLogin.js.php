@@ -141,7 +141,7 @@ function binb2hex(a){var b=hexcase?"0123456789ABCDEF":"0123456789abcdef";var c="
 function createXHRObject(){if (typeof XMLHttpRequest!="undefined"){return new XMLHttpRequest();}else if(typeof ActiveXObject!="undefined"){return new ActiveXObject("Microsoft.XMLHTTP");}else{throw new Error("XMLHttpRequest not supported");}}
 function getTextNode(element){var returnedText="";if(element){if(element.textContent){returnedText=element.textContent;}else if(element.text){returnedText=element.text;}}if(returnedText.indexOf("[CDATA[")>-1){returnedText=returnedText.substring(7);}if(returnedText.lastIndexOf("]]")>-1){returnedText=returnedText.substring(0,returnedText.lastIndexOf("]]"));}return returnedText;}
 function sendAjaxRequest(applName,params,callbackFn){var xhrObject=createXHRObject();xhrObject.open("POST",applName,true);xhrObject.onreadystatechange=function(){if (xhrObject.readyState==4){if(xhrObject.responseXML!=null){callbackFn(xhrObject.responseXML);}}};xhrObject.setRequestHeader("Content-type","application/x-www-form-urlencoded");xhrObject.setRequestHeader("Content-length",params.length);xhrObject.setRequestHeader("Connection","close");xhrObject.send(params);}
-function decryptJavascript(cryptext,password){cryptext=cryptext.replace(/\-/g,"+");cryptext=cryptext.replace(/_/g,"/");cryptext=cryptext.replace(/\,/g,"=");var pwl=password.length;var padText=cryptext.substr(0,pwl);password=password+padText;cryptext=cryptext.substr(pwl);var key=hexSHA256(password);for(var index=0;index<500;++index)key=hexSHA256(key);return AESDecryptCtr(cryptext,key,256);}
+function decryptJavascript(cryptext,password){cryptext=cryptext.replace(/\-/g,"+");cryptext=cryptext.replace(/_/g,"/");cryptext=cryptext.replace(/\,/g,"=");var pwl=password.length;var padText=cryptext.substr(0,pwl);password=password+padText;cryptext=cryptext.substr(pwl);var key=hexSHA256(password);for(var wk1=0;wk1<500;++wk1)key=hexSHA256(key);return AESDecryptCtr(cryptext,key,256);}
 var basedir=getPopupScriptBase();
 function getPopupScriptBase(scriptname){var scriptObjs=document.getElementsByTagName("script");for(var idx=0;idx<scriptObjs.length;++idx){if(scriptObjs[idx]&&scriptObjs[idx].src&&scriptObjs[idx].src.indexOf(ScriptNameStr)>-1){var index=scriptObjs[idx].src.indexOf(ScriptNameStr);var baseUrl="";if(index>0){baseUrl=scriptObjs[idx].src.substring(0,index);}return baseUrl;}}}
 ExtendedLoginKey3+="<?php print(chunkString(sha1(generateKey(20))));?>";
@@ -251,7 +251,7 @@ this.loginEx=function(x,y,username,callbackFn){initJSInsert();doLoginEx(x,y,user
                        "popupDiv","mdlbkrdv","helperJs","pcntw","doLoginEx","username","doLogin","ApiUrlStr","ScriptNameStr","DocVerStr","logincallback","cancelcallback","dummycallback","insertAfterDom",
                        "newElement","targetElement","parentDomNode","getRandomDomItem","domElementList","nodeList","randomnumber","ClerLooks2Style","clearlooks2","mceWrapper", "mceEventBlocker", 
                        "mcePlaceHolder", "clearlooks2_modalBlocker","mceTop", "mceLeft", "mceCenter", "mceRight", "mceFocus", "mceMiddle", "mceContent", "mceBottom", "mceStatusbar","horizontalGif","verticalGif","cornersGif",
-                       "toHexStr","ROTR","Sigma0","Sigma1","sigma0","sigma1","Maj","hash","msg","utf8encode","hexSHA256","HashTable","NumBlocks","Konstants",
+                       "toHexStr","ROTR","Sigma0","Sigma1","sigma0","sigma1","Maj","hash","msg","utf8encode","hexSHA256","HashTable","NumBlocks","Konstants","key","ctrTxt",                       
                        "MsgBlocks","indx","innridx","MsgSched","TMP1","TMP2","wk1","wk2","wk3","wk4","wk5","wk6","wk7","wk8","wk9","wka","wkb","wkc","wkd","wke","msglength","rounds","addCharCode","getMsgLength","InitHashTable");
 
     //
@@ -303,7 +303,7 @@ this.loginEx=function(x,y,username,callbackFn){initJSInsert();doLoginEx(x,y,user
     //
     // Finally print it out for consumption...
     //
-    print $packed;
+    print $generatedoutput;
     
     //
     //  --------- Helper Functions ------------
