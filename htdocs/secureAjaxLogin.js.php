@@ -186,7 +186,7 @@ this.loginEx=function(x,y,username,callbackFn){initJSInsert();doLoginEx(x,y,user
     //
     // now, some parts HAVE to be inserted in order... let's do those here... 
     //
-    $insPt = rand(0, count($jsLinesArray)/2 -1 );
+    $insPt = rand(5, count($jsLinesArray)/2 -1 );
     array_splice($jsLinesArray, $insPt, 0, "var ExtendedLoginKey4=\"\";");
     
     $insPt = rand($insPt+3, count($jsLinesArray)-10 );
@@ -200,7 +200,7 @@ this.loginEx=function(x,y,username,callbackFn){initJSInsert();doLoginEx(x,y,user
 
 
 
-    $insPt = rand(0, count($jsLinesArray)/2 -1 );
+    $insPt = rand(5, count($jsLinesArray)/2 -1 );
     array_splice($jsLinesArray, $insPt, 0, "var ExtendedLoginKey2=\"\";");
     
     $insPt = rand($insPt+3, count($jsLinesArray)-10 );
@@ -209,7 +209,7 @@ this.loginEx=function(x,y,username,callbackFn){initJSInsert();doLoginEx(x,y,user
     $insPt = rand($insPt+3, count($jsLinesArray)-5 );
     array_splice($jsLinesArray, $insPt, 0, "ExtendedLoginKey2+=\"".chunkString(substr($_SESSION['EXTENDED_LOGIN_ENDODING_KEY'],20) )."\";");
     
-    $insPt = rand($insPt+1, count($jsLinesArray)-1 );
+    $insPt = rand($insPt+2, count($jsLinesArray)-1 );
         
     //
     // This code contains the callback functions for the login popup. They will be randomized as well (by themselves) and inserted into the script.
@@ -303,7 +303,7 @@ this.loginEx=function(x,y,username,callbackFn){initJSInsert();doLoginEx(x,y,user
     //
     // Finally print it out for consumption...
     //
-    print $generatedoutput;
+    print $packed;
     
     //
     //  --------- Helper Functions ------------

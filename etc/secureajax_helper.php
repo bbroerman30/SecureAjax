@@ -199,42 +199,53 @@ function sendResponse( $message )
 
 /**
  * Generate a random character string of the passed in length. 
- * Uses mt_rand to provide better random numbers.
+ * Uses /dev/urandom, CAPICOM.Utilities, and finally mt_rand to provide better random numbers.
  *
  * @param length - Int. The length of the random string to generate.
  * @return String - The randomly generated string.
  */
-function generateKey( $length )
-{
-  list($usec, $sec) = explode(' ', microtime());
-  mt_srand( (float)$sec + ((float) $usec * 100000) );
+function generateKey( $length ) {
+  $pr_bits = '';
 
-  // start with a blank password
-  $password = "";
-
-  // define possible characters
-  $possible = "0123456789bcdfghjkmnpqrstvwxyz";
-
-  // set up a counter
-  $i = 0;
-
-  // add random characters to $password until $length is reached
-  while ($i < $length)
-  {
-
-    // pick a random character from the possible ones
-    $char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
-
-    // we don't want this character if it's already in the password
-    if (!strstr($password, $char))
-    {
-      $password .= $char;
-      $i++;
+    // Unix/Linux platform?
+    $fp = @fopen('/dev/urandom','rb');
+    if ($fp !== FALSE) {
+        $pr_bits .= @fread($fp,$length);
+        @fclose($fp);
     }
 
-  }
+    // MS-Windows platform?
+    if (@class_exists('COM')) {
+        // http://msdn.microsoft.com/en-us/library/aa388176(VS.85).aspx
+        try {
+            $CAPI_Util = new COM('CAPICOM.Utilities.1');
+            $pr_bits .= $CAPI_Util->GetRandom($length,0);
 
-  return $password;
+            // if we ask for binary data PHP munges it, so we
+            // request base64 return value.  We squeeze out the
+            // redundancy and useless ==CRLF by hashing...
+            if ($pr_bits) { $pr_bits = md5($pr_bits,TRUE); }
+        } catch (Exception $ex) {
+            // echo 'Exception: ' . $ex->getMessage();
+        }
+    }
+    
+    // Make sure we're base64 encoded and then all lower case (to make sure everything's safe for output),
+    // and make sure we're limited by the length...
+    $pr_bits = strtolower(substr(base64_encode($pr_bits),$length));
+    
+    // Now, remove special characters that we cant' have ( + = / )
+    $pr_bits = str_replace(array("/", "+", "="),"", $pr_bits);
+
+    // If the resultant string is not long enough, then use mt_rand to get the rest.
+    if (strlen($pr_bits) <$length) {
+        $possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+        for($i=strlen($pr_bits); $i < $length; ++$i )
+            $pr_bits .= substr($possible, mt_rand(0, strlen($possible)-1), 1);
+    } 
+    
+    // Finally, return the string.
+    return $pr_bits;
 }
 
 /**
