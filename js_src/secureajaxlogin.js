@@ -161,6 +161,23 @@ function SecureAjaxLoginObject() {
 	function binb2str(a){var b="";var c=(1<<chrsz)-1;for(var i=0;i<a.length*32;i+=chrsz){b+=String.fromCharCode((a[i>>5]>>>(32-chrsz-i%32))&c)}return b}
 	function binb2hex(a){var b=hexcase?"0123456789ABCDEF":"0123456789abcdef";var c="";for(var i=0;i<a.length*4;i++){c+=b.charAt((a[i>>2]>>((3-i%4)*8+4))&15)+b.charAt((a[i>>2]>>((3-i%4)*8))&15)}return c}
 
+	// SHA-256 javascript implementation from sha256.js file included in this directory
+  // See that file for an expanded explanation of this code block:
+	var Konstants=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+	var InitHashTable = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
+	function toHexStr(cryptext){var chrsz="",wk3;for(var wk2=7;wk2>=0;wk2--){wk3=(cryptext>>>(wk2*4))&0xf;chrsz+=wk3.toString(16);}return chrsz;}
+	function ROTR(wk2,wk3){return(wk3>>>wk2)|(wk3<<(32-wk2));}
+	function Sigma0(wk3){return ROTR(2,wk3)^ROTR(13,wk3)^ROTR(22,wk3);}
+	function Sigma1(wk4){return ROTR(6,wk4)^ROTR(11,wk4)^ROTR(25,wk4);}
+	function sigma0(wk4){return ROTR(7,wk4)^ROTR(18,wk4)^(wk4>>>3);}
+	function sigma1(wk5){return ROTR(17,wk5)^ROTR(19,wk5)^(wk5>>>10);}
+	function Ch(wk5,wk4,wk3){return(wk5&wk4)^(~wk5&wk3);}
+	function Maj(wk5,wk4,wk3){return(wk5&wk4)^(wk5&wk3)^(wk4&wk3);}
+	function addCharCode(){return String.fromCharCode(0x80);} 
+	function getMsgLength(cryptext){return cryptext.length;}
+	function hexSHA256(msg){msg=msg.encodeUTF8()+addCharCode();var msglen=getMsgLength(msg);var msgln2=msglen/4+2;var NumBlocks=Math.ceil(msgln2/0x10);var MsgBlocks=new Array(NumBlocks);for(var indx=0;indx<NumBlocks;indx++){MsgBlocks[indx]=new Array(0x10);for(var innridx=0;innridx<0x10;innridx++){MsgBlocks[indx][innridx]=(msg.charCodeAt(indx*0x40+innridx*4)<<24)|(msg.charCodeAt(indx*0x40+innridx*4+1)<<0x10)|(msg.charCodeAt(indx*0x40+innridx*4+2)<<8)|(msg.charCodeAt(indx*0x40+innridx*4+3))}}MsgBlocks[NumBlocks-1][14]=((msglen-1)*8)/Math.pow(2,32);MsgBlocks[NumBlocks-1][14]=Math.floor(MsgBlocks[NumBlocks-1][14]);MsgBlocks[NumBlocks-1][15]=((msglen-1)*8)&0xFFFFFFFF;var HashTable=InitHashTable.slice(0);var MsgSched=new Array(0x40);var wk1,wk2,wk3,wk4,wk5,wk6,wk7,wk8;for(var indx=0;indx<NumBlocks;indx++){for(var innridx=0;innridx<0x10;innridx++){MsgSched[innridx]=MsgBlocks[indx][innridx]}for(var innridx=0x10;innridx<0x40;innridx++){MsgSched[innridx]=(sigma1(MsgSched[innridx-2])+MsgSched[innridx-7]+sigma0(MsgSched[innridx-15])+MsgSched[innridx-16])&0xFFFFFFFF}wk1=HashTable[0];wk2=HashTable[1];wk3=HashTable[2];wk4=HashTable[3];wk5=HashTable[4];wk6=HashTable[5];wk7=HashTable[6];wk8=HashTable[7];for(var wk9=0;wk9<0x40;wk9++){var TMP1=wk8+Sigma1(wk5)+Ch(wk5,wk6,wk7)+Konstants[wk9]+MsgSched[wk9];var TMP2=Sigma0(wk1)+Maj(wk1,wk2,wk3);wk8=wk7;wk7=wk6;wk6=wk5;wk5=(wk4+TMP1)&0xFFFFFFFF;wk4=wk3;wk3=wk2;wk2=wk1;wk1=(TMP1+TMP2)&0xFFFFFFFF}HashTable[0]=(HashTable[0]+wk1)&0xFFFFFFFF;HashTable[1]=(HashTable[1]+wk2)&0xFFFFFFFF;HashTable[2]=(HashTable[2]+wk3)&0xFFFFFFFF;HashTable[3]=(HashTable[3]+wk4)&0xFFFFFFFF;HashTable[4]=(HashTable[4]+wk5)&0xFFFFFFFF;HashTable[5]=(HashTable[5]+wk6)&0xFFFFFFFF;HashTable[6]=(HashTable[6]+wk7)&0xFFFFFFFF;HashTable[7]=(HashTable[7]+wk8)&0xFFFFFFFF}return toHexStr(HashTable[0])+toHexStr(HashTable[1])+toHexStr(HashTable[2])+toHexStr(HashTable[3])+toHexStr(HashTable[4])+toHexStr(HashTable[5])+toHexStr(HashTable[6])+toHexStr(HashTable[7])};
+	
+	
 	/**
 	 * Create the standard XMLHTTPRequest object. 
 	 * a new object instance is returned for each invocation (allows simultaneous requests)
