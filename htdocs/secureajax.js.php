@@ -61,7 +61,7 @@
 
             if( $password !== false )
             {
-                $generatedoutput = getMainAjaxScript();
+                 $generatedoutput = getMainAjaxScript();
                 
                 $passwordLength = strlen($password);
                 $padding = generateKey( $passwordLength );
@@ -108,8 +108,8 @@
                                "<div style='float:right'><input type='button' id='cancel' name='cancel' value='Cancel' onclick='cancelLogin();return false;'/></div>" .
                                "</div></form>" .
                                "<script type='text/javascript'>" .
-                               "function login(){var pwd=document.getElementById('pass').value;var callbackFn=inlinePopup.getWindowArg('".$_SESSION["logincallback"]."');callbackFn('".$username."',pwd);inlinePopup.close();}\n" .
-                               "function cancelLogin(){var callbackFn=inlinePopup.getWindowArg('".$_SESSION["cancelcallback"]."'); inlinePopup.close(); if(callbackFn){callbackFn('','',null);}}\n" .
+                               "function login(){var pwd=document.getElementById('pass').value;var callbackFn=".$_SESSION["inlinePopup"].".getWindowArg('".$_SESSION["logincallback"]."');callbackFn('".$username."',pwd);".$_SESSION["inlinePopup"].".close();}\n" .
+                               "function cancelLogin(){var callbackFn=".$_SESSION["inlinePopup"].".getWindowArg('".$_SESSION["cancelcallback"]."'); ".$_SESSION["inlinePopup"].".close(); if(callbackFn){callbackFn('','',null);}}\n" .
                                "setTimeout(function(){document.getElementById('pass').focus();},250);" .
                                "</script>" .
                                "</body>" .

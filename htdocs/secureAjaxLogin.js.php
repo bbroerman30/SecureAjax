@@ -187,6 +187,35 @@
                          "span {display:block; left:7px; font-family:Arial, Verdana; font-size:11px; line-height:23px}" );
 
    //
+   // The Javascript for the popup dialog. Again, processed in the same way, with every other string encrypted
+   //
+   $popupHelperJS = array(  "<script type='text/javascript'>var ", 
+                            "inlinePopup",
+                            "={",
+                            "init:",
+                            "function(){this.win=opener||parent||top;this.",
+                            "parameters",
+                            "=null;this.isOpera=window.opera&&opera.buildNumber;},",
+                            "setWindowArgs",
+                            ":function(n){this.",
+                            "parameters",
+                            "=n;this.",
+                            "popupObj",
+                            "=this.",
+                            "parameters",
+                            "['inline_popup_Obj'];},getWindowArg:function(n){return this.",
+                            "parameters",
+                            "[n];},close:function(){var ",
+                            "that",
+                            "=this;function close(){",
+                            "that.popupObj.close",
+                            "();",
+                            "that.parameters=that.popupObj",
+                            "=null;};if(this.isOpera){this.win.setTimeout(close, 0);}else{close();}}};",
+                            "inlinePopup.init()",
+                            ";</script>" );
+
+   //
    // This header JavaScript will be at the front of the randomized output. It will always be in this order
    // and at the beginning of the output JavaScript.
    //
@@ -249,6 +278,11 @@ var imgCorners="Y29ybmVycw==".decode64();
 var basedir=getPopupScriptBase();
 var validateStrText="dmFsaWQ9".decode64();
 var iframeStrText='aWZyYW1l'.decode64();
+var contentTypeHdrStr='Q29udGVudC10eXBl'.decode64();
+var contentTypeStr='YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVk'.decode64();
+var contentLenHdrStr='Q29udGVudC1sZW5ndGg='.decode64();
+var connectionHdrStr='Q29ubmVjdGlvbg=='.decode64();
+var connectionStr='Y2xvc2U='.decode64();
 function splitOnAsterisk(wk1){return wk1.split(encrStringSplitToken)}
 function getMsgLen2div4(msglen){return msglen/4+2}
 function joinstub(msg, glue){return msg.join(glue)}
@@ -263,6 +297,7 @@ function appenDomChild(wk1,wk2){return wk1.appendChild(wk2)}
 var inserttextstr="<?php print(printEncryptOdd($evalFuncStr,$executeScriptKey));?>";
 var insertPopupTextStr="<?php print(printEncryptOdd($popupDomStr,$executeScriptKey));?>";
 var insertPopupCssStr="<?php print(printEncryptOdd($popupDomCss,$executeScriptKey));?>";
+var insertPopupHelperJS="<?php print(printEncryptOdd($popupHelperJS,$executeScriptKey));?>";
 function hex_sha1(wk1){return binb2hex(core_sha1(str2binb(wk1),arraylen(wk1)*chrsz))}
 function Cipher(wk1,wk3){var wk4=4;var wk5=arraylen(wk3)/wk4-1;var wk7=[[],[],[],[]];for(var wk8=0;wk8<4*wk4;wk8++){wk7[wk8%4][Math.floor(wk8/4)]=wk1[wk8]}wk7=AddRoundKey(wk7,wk3,0,wk4);for(var wk8=1;wk8<wk5;wk8++){wk7=SubBytes(wk7,wk4);wk7=ShiftRows(wk7,wk4);wk7=MixColumns(wk7,wk4);wk7=AddRoundKey(wk7,wk3,wk8,wk4)}wk7=SubBytes(wk7,wk4);wk7=ShiftRows(wk7,wk4);wk7=AddRoundKey(wk7,wk3,wk5,wk4);var wk9=new Array(4*wk4);for(var wk8=0;wk8<4*wk4;wk8++){wk9[wk8]=wk7[wk8%4][Math.floor(wk8/4)]}return wk9}
 function SubBytes(wk2,wk1){for(var wk6=0;wk6<4;wk6++){for(var wk5=0;wk5<wk1;wk5++){wk2[wk6][wk5]=Sbox[wk2[wk6][wk5]]}}return wk2}
@@ -304,14 +339,14 @@ function str2binb(wk1){var wk2=Array();var wk4=(1<<chrsz)-1;for(var wk3=0;wk3<ar
 function binb2hex(wk1){var wk2=HexCharStr;var wk4="";for(var wk3=0;wk3<arraylen(wk1)*4;wk3++){wk4+=wk2.charAt((wk1[wk3>>2]>>((3-wk3%4)*chrsz+4))&V15)+wk2.charAt((wk1[wk3>>2]>>((3-wk3%4)*chrsz))&V15)}return wk4}
 function createXHRObject(){if (typeof XMLHttpRequest!="undefined"){return new XMLHttpRequest();}else if(typeof ActiveXObject!="undefined"){return new ActiveXObject("Microsoft.XMLHTTP");}else{throw new Error("XMLHttpRequest not supported");}}
 function getTextNode(element){var returnedText="";if(element){if(element.textContent){returnedText=element.textContent;}else if(element.text){returnedText=element.text;}}if(returnedText.indexOf("[CDATA[")>-1){returnedText=returnedText.substring(7);}if(returnedText.lastIndexOf("]]")>-1){returnedText=returnedText.substring(0,returnedText.lastIndexOf("]]"));}return returnedText;}
-function sendAjaxRequest(applName,params,callbackFn){var xhrObject=createXHRObject();xhrObject.open("POST",applName,true);xhrObject.onreadystatechange=function(){if (xhrObject.readyState==4){if(xhrObject.responseXML!=null){callbackFn(xhrObject.responseXML);}}};xhrObject.setRequestHeader("Content-type","application/x-www-form-urlencoded");xhrObject.setRequestHeader("Content-length",arraylen(params));xhrObject.setRequestHeader("Connection","close");xhrObject.send(params);}
+function sendAjaxRequest(applName,params,callbackFn){var xhrObject=createXHRObject();xhrObject.open("POST",applName,true);xhrObject.onreadystatechange=function(){if (xhrObject.readyState==4){if(xhrObject.responseXML!=null){callbackFn(xhrObject.responseXML);}}};xhrObject.setRequestHeader(contentTypeHdrStr,contentTypeStr);xhrObject.setRequestHeader(contentLenHdrStr,arraylen(params));xhrObject.setRequestHeader(connectionHdrStr,connectionStr);xhrObject.send(params);}
 function decryptJavascript(cryptext,password){cryptext=FixBase64Encode(cryptext);var pwl=arraylen(password);var padText=cryptext.substr(0,pwl);password=password+padText;cryptext=cryptext.substr(pwl);var key=hexSHA256(password);for(var wk1=0;wk1<Vx40*pwl;++wk1)key=hexSHA256(key);return AESDecryptCtr(cryptext,key,256);}
 function getPopupScriptBase(scriptname){var scriptObjs=getByTagName("script");for(var idx=0;idx<arraylen(scriptObjs);++idx){if(scriptObjs[idx]&&scriptObjs[idx].src&&scriptObjs[idx].src.indexOf(ScriptNameStr)>-1){var index=scriptObjs[idx].src.indexOf(ScriptNameStr);var baseUrl="";if(index>0){baseUrl=scriptObjs[idx].src.substring(0,index);}return baseUrl;}}}
 ExtendedLoginKey3+="<?php print(chunkString(sha1(generateKey(20))));?>";
 function getRandomDomItem(){var domElementList=[];var nodeList=getByTagName("div");for(var i=0, ll=arraylen(nodeList);i!=ll;domElementList.push(nodeList[i++]));nodeList=getByTagName("span");for(i=0,ll=arraylen(nodeList);i!=ll;domElementList.push(nodeList[i++]));nodeList=getByTagName("p");for(i=0,ll=arraylen(nodeList);i!=ll;domElementList.push(nodeList[i++]));var randomnumber=Math.floor(Math.random()*arraylen(domElementList));return domElementList[randomnumber];}
 function insertAfterDom(newElement,targetElement){var parentDomNode = targetElement.parentNode;if(parentDomNode.lastchild==targetElement){appenDomChild(parentDomNode,newElement);}else{parentDomNode.insertBefore(newElement, targetElement.nextSibling);}}
 function prepareCssImages(){var ClerLooks2Style=processString(insertPopupCssStr);ClerLooks2Style.replace(imgBaseDirName+imgHoriz+imgTypeSuffix,horizontalGif);ClerLooks2Style.replace(imgBaseDirName+imgVert+imgTypeSuffix,verticalGif);ClerLooks2Style.replace(imgBaseDirName+imgCorners+imgTypeSuffix,cornersGif);return ClerLooks2Style}
-function LoginPopup(wk1,wk2,wk3,wk4,wk5,contentHtml,parameters){var that=this;var ClerLooks2Style=prepareCssImages();var styleElement=createDomElement(getDomDocument(),'style');styleElement.setAttribute("type","text/css");styleElement.setAttribute("id","clearlooks2");if(styleElement.styleSheet){styleElement.styleSheet.cssText=ClerLooks2Style;}else{appenDomChild(styleElement,getDomDocument().createTextNode(ClerLooks2Style));}appenDomChild(getByTagName('head')[0],styleElement);var popupDiv=createDomElement(getDomDocument(),"div");popupDiv.id="mce_login";popupDiv.className="clearlooks2";popupDiv.style.overflow="auto";popupDiv.style.left=wk1+"px";popupDiv.style.top=wk2+"px";popupDiv.style.width=wk3+"px";popupDiv.style.height=wk4+"px";popupDiv.style.zIndex=30005;insertAfterDom(popupDiv,getRandomDomItem());var mdlbkrdv=createDomElement(getDomDocument(),"div");mdlbkrdv.id='inlinepopups_modalblocker';mdlbkrdv.className='clearlooks2_modalBlocker';mdlbkrdv.style.display='none';mdlbkrdv.style.zIndex=parseInt(popupDiv.style.zIndex)-1;appenBodyChild(mdlbkrdv);parameters.inline_popup_Obj=that;popupDiv.innerHTML=processString(insertPopupTextStr).StrFormat(popupDiv.id,wk5,(wk3-10),(wk4-29));;var helperJs = "PHNjcmlwdCB0eXBlPSc=".decodeBase64()+textJavaScriptStr+"'>var inlinePopup={init:function(){this.win=opener||parent||top;this.parameters=null;this.isOpera=window.opera&&opera.buildNumber;},setWindowArgs:function(n){this.parameters=n;this.popupObj=this.parameters['inline_popup_Obj'];},getWindowArg:function(n){return this.parameters[n];},close:function(){var that=this;function close(){that.popupObj.close();that.parameters=that.popupObj=null;};if(this.isOpera){this.win.setTimeout(close, 0);}else{close();}}};inlinePopup.init();</script>";var idx=contentHtml.indexOf('</head>');if(idx>0){contentHtml=contentHtml.substring(0,idx)+helperJs+contentHtml.substring(idx);}else{contentHtml="<head>"+helperJs+"</head>";}setTimeout( function(){var pcntw=getByTagElem(popupDiv,iframeStrText)[0].contentWindow;pcntw.document.write(contentHtml);pcntw.inlinePopup.setWindowArgs(parameters);}, 500 );this.show=function(){popupDiv.style.display = 'block';mdlbkrdv.style.display = 'block';};this.close=function(){popupDiv.style.display = 'none';mdlbkrdv.style.display = 'none';popupDiv.parentNode.removeChild(popupDiv);mdlbkrdv.parentNode.removeChild(mdlbkrdv);}};
+function LoginPopup(wk1,wk2,wk3,wk4,wk5,contentHtml,parameters){var that=this;var ClerLooks2Style=prepareCssImages();var styleElement=createDomElement(getDomDocument(),'style');styleElement.setAttribute("type","text/css");styleElement.setAttribute("id","clearlooks2");if(styleElement.styleSheet){styleElement.styleSheet.cssText=ClerLooks2Style;}else{appenDomChild(styleElement,getDomDocument().createTextNode(ClerLooks2Style));}appenDomChild(getByTagName('head')[0],styleElement);var popupDiv=createDomElement(getDomDocument(),"div");popupDiv.id="mce_login";popupDiv.className="clearlooks2";popupDiv.style.overflow="auto";popupDiv.style.left=wk1+"px";popupDiv.style.top=wk2+"px";popupDiv.style.width=wk3+"px";popupDiv.style.height=wk4+"px";popupDiv.style.zIndex=30005;insertAfterDom(popupDiv,getRandomDomItem());var mdlbkrdv=createDomElement(getDomDocument(),"div");mdlbkrdv.id='inlinepopups_modalblocker';mdlbkrdv.className='clearlooks2_modalBlocker';mdlbkrdv.style.display='none';mdlbkrdv.style.zIndex=parseInt(popupDiv.style.zIndex)-1;appenBodyChild(mdlbkrdv);parameters.inline_popup_Obj=that;popupDiv.innerHTML=processString(insertPopupTextStr).StrFormat(popupDiv.id,wk5,(wk3-10),(wk4-29));var helperJs=processString(insertPopupHelperJS);var idx=contentHtml.indexOf('</head>');if(idx>0){contentHtml=contentHtml.substring(0,idx)+helperJs+contentHtml.substring(idx);}else{contentHtml="<head>"+helperJs+"</head>";}setTimeout( function(){var pcntw=getByTagElem(popupDiv,iframeStrText)[0].contentWindow;pcntw.document.write(contentHtml);pcntw.inlinePopup.setWindowArgs(parameters);}, 500 );this.show=function(){popupDiv.style.display = 'block';mdlbkrdv.style.display = 'block';};this.close=function(){popupDiv.style.display = 'none';mdlbkrdv.style.display = 'none';popupDiv.parentNode.removeChild(popupDiv);mdlbkrdv.parentNode.removeChild(mdlbkrdv);}};
 function doDummyMethod1(username,password2,callbackFn){var that=this;var cryptext=getTextNode(getByTagElem(username,password2)[0]);var rstxt=AESDecryptCtr(cryptext,ExtendedLoginKey3,512);callbackFn(rstxt);};
 function doDummyMethod2(username,password3,callbackFn){var that=this;var cryptext=getTextNode(getByTagElem(username,password3)[0]);var rstxt=AESDecryptCtr(cryptext,ExtendedLoginKey3,512);callbackFn(rstxt);};
 function doLogin(username,password,callbackFn){sendAjaxRequest(ApiUrlStr,usrStrText+username,function(DocVerStr){if(getByTagElem(DocVerStr,responseStr)[0]){var docScrText=decryptJavascript(getTextNode(getByTagElem(DocVerStr,responseStr)[0]),password);if(docScrText.indexOf(textJavaScriptStr)>0){executeScript(docScrText,callbackFn);}else{callbackFn(false);}}else{callbackFn(false);}});};
@@ -358,8 +393,6 @@ this.loginEx=function(wk1,wk2,username,callbackFn){initJSInsert();doLoginEx(wk1,
     $insPt = rand($insPt+1, count($jsLinesArray)-1 );
     array_splice($jsLinesArray, $insPt, 0, "function processString(cryptext){var StringParts=splitOnAsterisk(cryptext);var returnedText='';for(var i=0;i<arraylen(StringParts);i++){if(i%2==0){returnedText+=AESDecryptCtr(StringParts[i],ExtendedLoginKey4,256);}else{returnedText+=StringParts[i];}}return returnedText;}");
 
-
-
     $insPt = rand(5, count($jsLinesArray)/2 -1 );
     array_splice($jsLinesArray, $insPt, 0, "var ExtendedLoginKey2=\"\";");
 
@@ -392,7 +425,6 @@ this.loginEx=function(wk1,wk2,username,callbackFn){initJSInsert();doLoginEx(wk1,
      //
     $generatedoutput = $generatedHeader . implode("\n",$jsLinesArray) ."\n". $generatedFooter;
 
-
     //
     // Obfuscate the JavaScript code above, changing function and variable names to random strings
     //
@@ -407,12 +439,12 @@ this.loginEx=function(wk1,wk2,username,callbackFn){initJSInsert();doLoginEx(wk1,
                        "createXHRObject","getTextNode","element","returnedText","sendAjaxRequest","applName","mce_login","PasswordTextStr","doDummyMethod1","doDummyMethod2","logincallbackFn","getDomDocument","appenBodyChild","encrStringSplitToken","V128",
                        "params","callbackFn","xhrObject","decryptJavascript","cryptext","password","basedir","inlinepopups_modalblocker","validateStrText","password2","password3","executeScript","getByTagName","getBody","V4294967296","V15","V31","V63",
                        "getPopupScriptBase","scriptname","scriptObjs","baseUrl","LoginPopup","contentHtml","parameters","detailcontent","evalcallback","inserttextstr","headerDomObj","newScriptObj","rstxt","arraylen","appenDomChild","splitOnAsterisk",
-                       "popupDiv","mdlbkrdv","helperJs","pcntw","doLoginEx","username","doLogin","ApiUrlStr","ScriptNameStr","DocVerStr","logincallback","cancelcallback","dummycallback","insertAfterDom","FixBase64Encode","V283","V909522486",
+                       "popupDiv","mdlbkrdv","helperJs","pcntw","doLoginEx","username","doLogin","ApiUrlStr","ScriptNameStr","DocVerStr","logincallback","cancelcallback","dummycallback","insertAfterDom","FixBase64Encode","V283","V909522486","inlinePopup",
                        "newElement","targetElement","parentDomNode","getRandomDomItem","domElementList","nodeList","randomnumber","ClerLooks2Style","clearlooks2","mceWrapper", "mceEventBlocker","getMsgLen2div4","V10","V40","Vx40","joinstub","glue",
-                       "mcePlaceHolder", "clearlooks2_modalBlocker","mceTop", "mceLeft", "mceCenter", "mceRight", "mceFocus", "mceMiddle", "mceContent", "mceBottom", "mceStatusbar","horizontalGif","verticalGif","cornersGif","renSlice",
+                       "mcePlaceHolder", "clearlooks2_modalBlocker","mceTop", "mceLeft", "mceCenter", "mceRight", "mceFocus", "mceMiddle", "mceContent", "mceBottom", "mceStatusbar","horizontalGif","verticalGif","cornersGif","renSlice","_modalBlocker",
                        "toHexStr","ROTR","Sigma0","Sigma1","sigma0","sigma1","Ch2","Maj","hash","msg","utf8encode","hexSHA256","HashTable","NumBlocks","Konstants","key","ctrTxt","renMathPow","renMathCeil","renCharCodeAt","prepareMsgBlks","limitPrm",
                        "MsgBlocks","indx","innridx","MsgSched","TMP1","TMP2","wk1","wk2","wk3","wk4","wk5","wk6","wk7","wk8","wk9","wka","wkb","wkc","wkd","wke","wkf","wkg","wkhi","wkhj","msglength","rounds","addCharCode","getMsgLength",
-                       "imgBaseDirName","imgTypeSuffix","imgHoriz","imgVert","imgCorners");
+                       "imgBaseDirName","imgTypeSuffix","imgHoriz","imgVert","imgCorners","insertPopupHelperJS","init","popupObj","setWindowArgs","show","close","contentTypeHdrStr","contentTypeStr","contentLenHdrStr","connectionHdrStr","connectionStr");
 
     //
     // Now, for each keyword, generate a unique 6 digit hexidecimal name
@@ -445,6 +477,8 @@ this.loginEx=function(wk1,wk2,username,callbackFn){initJSInsert();doLoginEx(wk1,
     //
     $_SESSION["logincallback"] = array_search("logincallback",$encodedSet);
     $_SESSION["cancelcallback"] = array_search("cancelcallback",$encodedSet);
+    $_SESSION["inlinePopup"] = array_search("inlinePopup",$encodedSet);
+    
 
     //
     // Now, go through and make the substitutions.
