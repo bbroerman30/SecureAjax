@@ -497,7 +497,7 @@ this.loginEx=function(wk_1,wk_2,username,callbackFn){initJSInsert();doLoginEx(wk
     //
     // Finally print it out for consumption...
     //
-    print $generatedoutput;
+    print $packed;
 
     //
     //  --------- Helper Functions ------------
